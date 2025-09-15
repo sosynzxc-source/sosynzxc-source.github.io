@@ -1,0 +1,2524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0b0b">
+    <title data-lang-key="title">Firebase Clicker Evolved v4.6</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato&family=Montserrat&family=Open+Sans&family=Roboto&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root{--bg-dark:#0b0b0b;--bg-mid:#1a1a1a;--text:#fff;--muted:#888;--accent:#ba68c8;--accent-rgb:186,104,200;--success:#00c853;--warning:#ffab00;--danger:#ff1744;--info:#2979ff;--prestige:#ffc107;--shadow:rgba(0,0,0,.35);--transition:all .3s ease;--font-family:'Inter','Segoe UI',sans-serif}html,body{scroll-behavior:smooth}body{font-family:var(--font-family);background:radial-gradient(circle at center,#1a1a1a 0%,#0b0b0b 100%);color:var(--text);display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;-webkit-tap-highlight-color:transparent;overflow-x:hidden}*{box-sizing:border-box;margin:0;padding:0}#app{width:100%;max-width:950px;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,var(--bg-dark),var(--bg-mid));box-shadow:0 18px 40px var(--shadow);border:1px solid rgba(255,255,255,.04);opacity:0;transform:scale(.95);transition:opacity .5s ease,transform .5s ease}#app.loaded{opacity:1;transform:scale(1)}.top-strip{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.03)}.tab-nav{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;padding:12px;background:rgba(255,255,255,.02);overflow-x:auto}.tab-btn{padding:10px 5px;border-radius:8px;background:0 0;border:none;color:#f5f5dc;font-weight:600;cursor:pointer;transition:var(--transition);font-size:14px;white-space:nowrap;position:relative;display:flex;align-items:center;justify-content:center;gap:8px}.tab-btn.quest-complete::after{content:'';position:absolute;top:6px;right:6px;width:8px;height:8px;background-color:var(--success);border-radius:50%;animation:pulse-dot 1.5s infinite}@keyframes pulse-dot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.7}}.tab-btn:hover{background:rgba(255,255,255,.1)}.tab-btn.active{background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent),#000 30%));color:#fff}.container{padding:24px;display:flex;gap:20px}.left-column{flex:1;min-width:280px;display:flex;flex-direction:column;gap:12px}.right-column{width:360px;display:flex;flex-direction:column;gap:12px}.card{background:rgba(255,255,255,.02);padding:20px;border-radius:12px}h3{font-size:18px;font-weight:700;margin-bottom:15px;color:var(--text);display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:10px}.click-counter{font-size:clamp(2.5rem,10vw,4.5rem);font-weight:800;text-align:center;margin:12px 0;position:relative;line-height:1;color:var(--text);text-shadow:0 0 15px rgba(var(--accent-rgb),.4)}.click-counter span.fly{position:absolute;left:50%;animation:flyUp .8s ease-out forwards;font-weight:700;font-size:24px;color:var(--accent);pointer-events:none;z-index:10}.click-counter span.fly.crit{color:var(--prestige);font-size:32px;font-weight:900;animation-duration:1.2s;text-shadow:0 0 10px var(--prestige);transform:translate(-50%,0) scale(1.2)}@keyframes flyUp{0%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-70px)}}.btn{display:flex;justify-content:space-between;align-items:center;width:100%;padding:14px;border-radius:10px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,.05);transition:var(--transition);-webkit-user-select:none;user-select:none;color:#fff;background:linear-gradient(145deg,#1d1d1d,#2a2a2a);box-shadow:5px 5px 10px var(--shadow),-5px -5px 10px rgba(45,45,45,.2);margin-bottom:12px;text-align:left}.btn:last-child{margin-bottom:0}.btn:hover:not(:disabled){background:linear-gradient(145deg,#2a2a2a,#1d1d1d);transform:translateY(-2px);box-shadow:7px 7px 15px var(--shadow),-7px -7px 15px rgba(45,45,45,.25)}.btn:active:not(:disabled){box-shadow:inset 2px 2px 5px rgba(0,0,0,.5),inset -2px -2px 5px rgba(45,45,45,.2);transform:translateY(1px)}.btn:disabled{opacity:.5;cursor:not-allowed}.btn-click{padding:20px 44px;font-size:22px;border-radius:44px;animation:pulse 2s infinite cubic-bezier(.4,0,.6,1)}@keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(var(--accent-rgb),.7)}50%{transform:scale(1.05);box-shadow:0 0 20px 10px rgba(var(--accent-rgb),0)}}.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat-box{background:rgba(0,0,0,.2);padding:12px;border-radius:8px;text-align:center}.stat-label{font-size:12px;color:var(--muted)}.stat-value{font-size:18px;font-weight:700;color:var(--accent)}.notification-container{position:fixed;top:20px;right:20px;z-index:1000;max-width:350px}.notification{background:var(--bg-mid);color:var(--text);padding:15px;margin-bottom:10px;border-radius:12px;box-shadow:0 8px 25px var(--shadow);display:flex;align-items:center;border-left:4px solid var(--info);animation:slideIn .3s ease-out}@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}.notification.success{border-left-color:var(--success)}.notification.error{border-left-color:var(--danger)}.notification.prestige{border-left-color:var(--prestige)}.notification.offline{border-left-color:var(--warning)}.notification i{margin-right:10px;font-size:20px}.avatar{width:48px;height:48px;border-radius:12px;background:#2a2a2a;display:flex;align-items:center;justify-content:center;overflow:hidden}.avatar img{width:100%;height:100%;-o-object-fit:cover;object-fit:cover}.avatar-large{width:128px;height:128px;border-radius:50%;background:#2a2a2a;margin:0 auto 1.5rem;display:flex;justify-content:center;align-items:center;overflow:hidden;border:4px solid var(--accent)}.avatar-large i{font-size:64px;color:var(--muted)}.avatar-large img{width:100%;height:100%;-o-object-fit:cover;object-fit:cover}.small{font-size:13px;color:var(--muted)}input[type=file]{display:none}.loading-overlay{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;width:100%;position:fixed;top:0;left:0;z-index:10000;background-color:var(--bg-dark);transition:opacity .5s ease}.spinner{width:56px;height:56px;border:6px solid #444;border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.loading-overlay p{margin-top:20px;font-size:18px;color:var(--muted)}.form-container{max-width:420px;width:100%;background:#1e1e1e;padding:2.5rem;border-radius:1.5rem}.form-input{width:100%;padding:.75rem 1rem;border-radius:.5rem;border:1px solid #444;background:#2a2a2a;color:#e0e0e0;margin-bottom:1rem}.main-button{width:100%;padding:.75rem 1rem;border-radius:.5rem;font-weight:600;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent),#000 30%));color:#fff;border:none;cursor:pointer}.modal{position:fixed;z-index:1001;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,.7);display:none;justify-content:center;align-items:center;animation:fadeIn .3s ease}.modal-content{background:#1a1a1a;padding:30px;border-radius:12px;width:90%;max-width:500px;text-align:center;position:relative;animation:zoomIn .3s ease}@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes zoomIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}.color-swatches{display:flex;flex-wrap:wrap;gap:15px;margin-top:10px}.color-swatch{width:32px;height:32px;border-radius:50%;cursor:pointer;border:2px solid #555;transition:var(--transition)}.color-swatch:hover,.color-swatch.active{transform:scale(1.15);border-color:#fff}.btn-info-icon{color:var(--muted);margin-left:auto;padding-left:10px;cursor:help;min-width:20px}.btn-info-icon:hover{color:var(--accent)}#tooltip{position:fixed;background-color:#2a2a2a;color:#fff;padding:8px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.1);font-size:13px;z-index:10001;pointer-events:none;opacity:0;transition:opacity .2s ease;word-wrap:break-word;max-width:250px;text-align:left}#achievements-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:15px}.achievement{background-color:rgba(0,0,0,.3);padding:15px;border-radius:8px;text-align:center;border:1px solid transparent;transition:var(--transition)}.achievement.unlocked{border-color:var(--accent);background:radial-gradient(circle,rgba(var(--accent-rgb),.15) 0%,rgba(var(--accent-rgb),0) 70%)}.achievement i{font-size:28px;margin-bottom:10px;color:var(--muted)}.achievement.unlocked i{color:var(--accent);text-shadow:0 0 10px rgba(var(--accent-rgb),.5)}.achievement p{font-size:12px;font-weight:600;color:var(--muted)}.achievement.unlocked p{color:var(--text)}.game-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.game-card{cursor:pointer;text-align:center;background-color:rgba(0,0,0,.3);padding:20px;border-radius:12px;transition:all .3s ease}.game-card:hover{transform:translateY(-5px);box-shadow:0 10px 20px rgba(0,0,0,.5)}.game-card i{font-size:40px;color:var(--accent);margin-bottom:10px}#minesweeper-game{margin-top:15px}#minesweeper-board{display:grid;border:2px solid #555;width:-moz-fit-content;width:fit-content;margin:0 auto}.ms-cell{width:30px;height:30px;border:1px solid #777;background-color:#bbb;display:flex;justify-content:center;align-items:center;font-weight:700;cursor:pointer;font-size:16px;-webkit-user-select:none;user-select:none;color:#000}.ms-cell.hidden{background-color:#888}.ms-cell.revealed{background-color:#eee;cursor:default}.ms-cell.mine{background-color:red}.ms-cell.flag{background-color:#faa;color:#800}.ms-cell.number1{color:blue}.ms-cell.number2{color:green}.ms-cell.number3{color:red}.ms-cell.number4{color:#00008b}.ms-cell.number5{color:#8b0000}.ms-cell.number6{color:#008b8b}#minesweeper-stats{text-align:center;margin-bottom:10px;font-size:18px;color:var(--text)}#tic-tac-toe-board{display:grid;grid-template-columns:repeat(3,80px);grid-template-rows:repeat(3,80px);width:240px;height:240px;margin:20px auto;border:2px solid #555}.ttt-cell{width:80px;height:80px;border:1px solid #777;display:flex;justify-content:center;align-items:center;font-size:40px;cursor:pointer;-webkit-user-select:none;user-select:none;color:#fff}.ttt-cell.X{color:#ef5350}.ttt-cell.O{color:#42a5f5}#tictactoe-status{color:var(--text);font-size:18px;text-align:center}#flappy-bird-container{margin:20px auto;width:320px;height:480px;border:2px solid var(--accent);background:linear-gradient(to bottom,#7cc0f5,#b8e6fe);overflow:hidden;position:relative}#flappy-bird-bird{width:30px;height:20px;background-color:#ff0;position:absolute;left:50px;border-radius:50%;border:1px solid orange}.flappy-pipe{position:absolute;width:50px;background-color:green;border:2px solid #006400}#flappy-bird-score{position:absolute;top:10px;left:50%;transform:translateX(-50%);font-size:24px;font-weight:700;color:#000;z-index:10}#flappy-bird-start{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);padding:10px 20px;background-color:var(--accent);color:#fff;border-radius:8px;cursor:pointer;font-weight:700}#avatar-editor-modal img{display:block;max-width:100%}#changelog-container{background:rgba(0,0,0,.2);padding:15px;border-radius:8px;max-height:300px;overflow-y:auto}.changelog-version{color:var(--accent);font-weight:700}.changelog-list{list-style-type:disc;padding-left:20px;color:var(--muted)}.changelog-list li{margin-bottom:5px}#clan-member-list li{background:rgba(0,0,0,.2);padding:8px 12px;border-radius:6px;margin-bottom:5px}.golden-clicker{position:absolute;width:60px;height:60px;background-color:var(--prestige);border-radius:50%;display:flex;justify-content:center;align-items:center;cursor:pointer;z-index:100;border:3px solid #fff;box-shadow:0 0 20px var(--prestige);animation:goldenWobble 4s infinite,goldenFadeIn .5s ease-out forwards;opacity:0}.golden-clicker i{color:#fff;font-size:28px;text-shadow:0 0 10px rgba(0,0,0,.5)}@keyframes goldenWobble{0%,100%{transform:scale(1) rotate(0)}25%{transform:scale(1.1) rotate(-5deg)}75%{transform:scale(1.1) rotate(5deg)}}@keyframes goldenFadeIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+        #global-event-banner{position:sticky;top:0;z-index:500;background:rgba(17,17,17,.9);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);padding:10px 20px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:15px;animation:slideDown .5s ease-out forwards}@keyframes slideDown{from{transform:translateY(-100%)}to{transform:translateY(0)}}#global-event-banner .icon{font-size:24px}#global-event-banner .timer{margin-left:auto;font-weight:700;font-size:16px}
+        #artifacts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:10px}#artifacts-grid .artifact{background:rgba(0,0,0,.2);width:60px;height:60px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--muted);border:1px solid transparent}#artifacts-grid .artifact.unlocked{color:var(--accent);border-color:var(--accent);box-shadow:0 0 10px rgba(var(--accent-rgb),.4)}
+        #chat-messages{height:300px;overflow-y:auto;display:flex;flex-direction:column-reverse;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;margin-bottom:15px}.chat-message{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}.chat-avatar{width:32px;height:32px;border-radius:50%;overflow:hidden;flex-shrink:0}.chat-avatar img{width:100%;height:100%;object-fit:cover}.chat-content{flex-grow:1}.chat-username{font-weight:700;margin-right:8px}.chat-text{word-wrap:break-word;color:var(--muted)}#chat-input-area{display:flex;gap:10px}
+        /* START: Title Styles */
+        .beta-title{color:var(--success);font-weight:700;text-shadow:0 0 8px rgba(0,200,83,.7)}
+        .administrator-title{font-weight:800;background-image:linear-gradient(90deg,#111,#ff1744,#ff79c6,#ff1744,#111);background-size:200% auto;color:transparent;background-clip:text;-webkit-background-clip:text;animation:admin-text 4s linear infinite;text-shadow:0 0 10px rgba(255,23,68,.6)}@keyframes admin-text{to{background-position:200% center}}
+        /* END: Title Styles */
+        .password-wrapper{position:relative;display:flex;align-items:center}.password-wrapper .form-input{padding-right:2.5rem}.password-wrapper .toggle-password{position:absolute;right:.5rem;background:0 0;border:none;color:var(--muted);cursor:pointer;padding:.5rem}.password-wrapper .toggle-password:hover{color:var(--accent)}
+        /* START: Clan War Styles */
+        #clan-war-attack-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle,rgba(0,0,0,.8) 0%,rgba(0,0,0,.95) 100%);z-index:1002;display:none;flex-direction:column;justify-content:space-between;align-items:center;color:#fff;backdrop-filter:blur(5px);padding:2rem}
+        .cw-hud{width:100%;max-width:600px;display:flex;justify-content:space-between;align-items:center}
+        .cw-hud-box{background:rgba(255,255,255,.05);padding:.5rem 1rem;border-radius:8px;text-align:center}
+        .cw-hud-box .label{font-size:.8rem;color:var(--muted)}
+        .cw-hud-box .value{font-size:1.5rem;font-weight:700}
+        #cw-boss-asset{width:250px;height:250px;cursor:pointer;transition:transform .1s ease;-webkit-user-select:none;user-select:none}
+        #cw-boss-asset:active{transform:scale(.95)}
+        .cw-boss-damage-fly{position:absolute;left:50%;top:40%;transform:translateX(-50%);font-size:2rem;font-weight:bold;color:var(--warning);text-shadow:0 0 10px var(--warning);animation:flyUp 1s ease-out forwards;pointer-events:none}
+        .cw-health-bar-container{width:100%;max-width:400px;height:20px;background:rgba(0,0,0,.5);border-radius:10px;border:1px solid #444;padding:2px}
+        #cw-boss-health-bar{height:100%;background:linear-gradient(90deg,var(--danger),#c62828);border-radius:8px;transition:width .3s ease-in-out}
+        /* END: Clan War Styles */
+
+        /* START: Prestige Tree Styles */
+        #prestige-skill-tree-wrapper { position: relative; }
+        #prestige-skill-tree {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 110px; /* Фиксированная высота ряда */
+            gap: 40px 20px;
+            padding: 20px;
+            position: relative;
+        }
+        .skill-node {
+            position: relative;
+            background-color: rgba(0,0,0,.3);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #444;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .skill-node.purchased {
+            border-color: var(--prestige);
+            background: radial-gradient(circle,rgba(255,193,7,.15) 0%,rgba(255,193,7,0) 70%);
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+        }
+        .skill-node.available {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.5);
+        }
+        .skill-node.available:hover {
+            transform: scale(1.05);
+            background-color: rgba(var(--accent-rgb), 0.1);
+        }
+        .skill-node.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(80%);
+        }
+        .skill-node i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+        .skill-node.purchased i { color: var(--prestige); }
+        .skill-node .skill-level {
+            font-size: 12px;
+            color: var(--muted);
+        }
+        .skill-node .skill-cost {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--prestige);
+        }
+        .skill-node .skill-cost.max { color: var(--success); }
+        #prestige-tree-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: visible;
+        }
+        /* END: Prestige Tree Styles */
+        
+        @media (max-width:900px){body{padding:0}#app{border-radius:0;min-height:100vh}.container{flex-direction:column}.right-column{width:100%}.tab-nav{grid-template-columns:repeat(4,1fr)}.tab-btn span{display:none}.tab-btn{font-size:18px;padding:10px 2px}.game-grid{grid-template-columns:1fr}#flappy-bird-container,#minesweeper-board,#tic-tac-toe-board{margin:15px auto;max-width:90%}.ms-cell{width:25px;height:25px;font-size:14px}.ttt-cell{width:70px;height:70px;font-size:32px}#tic-tac-toe-board{width:210px;height:210px}}
+    </style>
+</head>
+<body id="body-root">
+    <div id="tooltip"></div>
+    <div id="notification-container" class="notification-container"></div>
+    
+    <!-- START: Clan War Attack Overlay (Redesigned) -->
+    <div id="clan-war-attack-overlay">
+        <div class="cw-hud">
+            <div class="cw-hud-box">
+                <div class="label" data-lang-key="clans_war_your_hp">YOUR HP</div>
+                <div class="value" style="color:var(--success)">100%</div>
+            </div>
+            <div class="cw-hud-box">
+                <div class="label" data-lang-key="clans_war_time_left">TIME LEFT</div>
+                <div id="clan-war-attack-timer" class="value">60</div>
+            </div>
+        </div>
+        <div id="cw-boss-container" style="position:relative;">
+            <svg id="cw-boss-asset" viewBox="0 0 100 100">
+                <defs><radialGradient id="grad-body" cx="50%" cy="50%" r="50%" fx="50%" fy="50%"><stop offset="0%" style="stop-color:#555"/><stop offset="100%" style="stop-color:#222"/></radialGradient><radialGradient id="grad-button" cx="50%" cy="50%" r="50%" fx="50%" fy="50%"><stop offset="0%" style="stop-color:#ff4d4d"/><stop offset="100%" style="stop-color:#b30000"/></radialGradient></defs>
+                <circle cx="50" cy="55" r="35" fill="url(#grad-body)" stroke="#111" stroke-width="2"/>
+                <rect x="45" y="20" width="10" height="15" fill="#333" stroke="#111" stroke-width="1"/>
+                <circle cx="50" cy="20" r="10" fill="url(#grad-body)" stroke="#111" stroke-width="1.5"/>
+                <circle cx="50" cy="20" r="4" fill="var(--danger)" stroke="#ff8c8c"><animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite"/></circle>
+                <circle cx="50" cy="55" r="15" fill="url(#grad-button)" stroke="#ff8c8c" stroke-width="1"/>
+                <path d="M 45 60 L 55 50" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div class="flex flex-col items-center w-full">
+            <div class="cw-health-bar-container mb-2">
+                <div id="cw-boss-health-bar"></div>
+            </div>
+            <div class="cw-hud-box">
+                <div class="label" data-lang-key="clans_war_damage_dealt">Damage dealt</div>
+                <div id="clan-war-attack-damage" class="value" style="color:var(--warning)">0</div>
+            </div>
+             <div class="cw-hud-box mt-2">
+                <div class="label" data-lang-key="stat_cpc">Clicks/click</div>
+                <div id="clan-war-attack-cpc" class="value" style="color:var(--accent)">0</div>
+            </div>
+        </div>
+    </div>
+    <!-- END: Clan War Attack Overlay -->
+
+    <div id="tamper-modal" class="loading-overlay" style="display: none; z-index: 20000;">
+        <div class="modal-content">
+            <h3 data-lang-key="tamper_title" style="color:var(--danger)"><i class="fas fa-exclamation-triangle"></i> ...</h3>
+            <p class="small mb-4 text-center" data-lang-key="tamper_desc">...</p>
+        </div>
+    </div>
+    
+    <div id="splash-modal" class="loading-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3 data-lang-key="splash_title">...</h3>
+            <p class="small mb-4 text-left" data-lang-key="splash_desc">...</p>
+            <button id="splash-continue-btn" class="main-button" data-lang-key="splash_btn">...</button>
+        </div>
+    </div>
+
+    <div id="loading-overlay" class="loading-overlay" style="display: none;"><div class="spinner"></div><p data-lang-key="loading_server">...</p></div>
+
+    <div id="auth-container" class="loading-overlay" style="opacity:0; pointer-events:none;">
+        <div class="form-container">
+            <h2 id="form-title" class="text-3xl font-bold text-center mb-6 text-white" data-lang-key="auth_login_title">...</h2>
+            <input type="text" id="username-input" class="form-input" required data-lang-placeholder="auth_username_placeholder">
+            <input type="email" id="email" class="form-input" data-lang-placeholder="auth_email_placeholder">
+            <div class="password-wrapper">
+                <input type="password" id="password" class="form-input" data-lang-placeholder="auth_password_placeholder">
+                <button type="button" id="toggle-password" class="toggle-password"><i id="toggle-password-icon" class="fas fa-eye"></i></button>
+            </div>
+            <button id="auth-button" class="main-button" data-lang-key="auth_login_btn">...</button>
+            <div class="mt-6 text-center text-sm text-gray-400"><p id="toggle-form-text" data-lang-key="auth_toggle_register_text">...</p></div>
+            <div id="error-message" class="mt-4 text-red-400 text-center text-sm hidden"></div>
+        </div>
+    </div>
+    
+    <div id="daily-reward-modal" class="modal">
+        <div class="modal-content">
+            <h3 data-lang-key="daily_reward_title"><i class="fas fa-gift"></i>...</h3>
+            <p class="small mb-4" data-lang-key="daily_reward_desc">...</p>
+            <div class="stat-box mb-4"><div id="daily-reward-text" class="stat-value text-2xl" style="color:var(--prestige)" data-lang-key="daily_reward_value">...</div></div>
+            <button id="claim-daily-reward-btn" class="main-button" data-lang-key="daily_reward_btn">...</button>
+        </div>
+    </div>
+
+    <div id="offline-progress-modal" class="modal">
+        <div class="modal-content">
+            <h3 data-lang-key="offline_title"><i class="fas fa-moon"></i> ...</h3>
+            <p class="small mb-4" data-lang-key="offline_desc_1">...</p>
+            <div class="stat-box mb-2"><div id="offline-time" class="stat-value text-xl">...</div><div class="stat-label" data-lang-key="offline_time_away">...</div></div>
+            <div class="stat-box mb-2"><div id="offline-base" class="stat-value text-xl">...</div><div class="stat-label" data-lang-key="offline_base_earnings">...</div></div>
+            <div class="stat-box mb-2"><div id="offline-bonus" class="stat-value text-xl">...</div><div class="stat-label" data-lang-key="offline_bonus_earnings">...</div></div>
+            <hr class="border-gray-700 my-3">
+            <div class="stat-box mb-4"><div id="offline-total" class="stat-value text-2xl" style="color:var(--success)">...</div><div class="stat-label" data-lang-key="offline_total_earnings">...</div></div>
+            <button id="offline-continue-btn" class="main-button" data-lang-key="btn_continue">...</button>
+        </div>
+    </div>
+
+    <div id="avatar-editor-modal" class="modal">
+        <div class="modal-content">
+            <h3 data-lang-key="avatar_editor_title"><i class="fas fa-crop-alt"></i>...</h3>
+            <div><img id="avatar-editor-image" src=""></div>
+            <div class="flex gap-2 mt-4">
+                <button id="avatar-editor-cancel" class="btn flex-1 justify-center" data-lang-key="btn_cancel">...</button>
+                <button id="avatar-editor-confirm" class="main-button flex-1" data-lang-key="btn_confirm">...</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="app" style="display: none;">
+        <div id="global-event-banner" style="display: none;">
+            <i id="global-event-icon" class="icon"></i>
+            <div>
+                <h4 id="global-event-title" class="font-bold">...</h4>
+                <p id="global-event-desc" class="text-sm text-muted">...</p>
+            </div>
+            <div id="global-event-timer" class="timer">--:--</div>
+        </div>
+
+        <div class="top-strip">
+            <div class="flex items-center gap-3"><div class="avatar" id="avatar-display"><i class="fas fa-user"></i></div><div><div id="user-status-text">...</div></div></div>
+            <button id="logout-button" title="Logout" class="bg-transparent border-none text-muted cursor-pointer text-lg"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+        <div class="tab-nav">
+            <button class="tab-btn active" data-tab="game"><i class="fas fa-mouse-pointer"></i><span data-lang-key="tab_game">...</span></button>
+            <button class="tab-btn" data-tab="upgrades"><i class="fas fa-bolt"></i><span data-lang-key="tab_upgrades">...</span></button>
+            <button class="tab-btn" data-tab="prestige"><i class="fas fa-star"></i><span data-lang-key="tab_prestige">...</span></button>
+            <button class="tab-btn" data-tab="ascension"><i class="fas fa-infinity"></i><span data-lang-key="tab_ascension">...</span></button>
+            <button class="tab-btn" data-tab="quests"><i class="fas fa-tasks"></i><span data-lang-key="tab_quests">...</span></button>
+            <button class="tab-btn" data-tab="achievements"><i class="fas fa-gem"></i><span data-lang-key="tab_achievements">...</span></button>
+            <button class="tab-btn" data-tab="clans"><i class="fas fa-users"></i><span data-lang-key="tab_clans">...</span></button>
+            <button class="tab-btn" data-tab="chat"><i class="fas fa-comments"></i><span data-lang-key="tab_chat">...</span></button>
+            <button class="tab-btn" data-tab="other-games"><i class="fas fa-gamepad"></i><span data-lang-key="tab_minigames">...</span></button>
+            <button class="tab-btn" data-tab="leaderboard"><i class="fas fa-trophy"></i><span data-lang-key="tab_leaderboard">...</span></button>
+            <button class="tab-btn" data-tab="profile"><i class="fas fa-user-cog"></i><span data-lang-key="tab_profile">...</span></button>
+            <button class="tab-btn" data-tab="settings"><i class="fas fa-palette"></i><span data-lang-key="tab_settings">...</span></button>
+            <button class="tab-btn" data-tab="development"><i class="fas fa-flask"></i><span data-lang-key="tab_development">...</span></button>
+        </div>
+        <div class="container">
+            <div class="left-column">
+                <div id="game" class="tab-content">
+                    <div class="card">
+                        <div class="click-counter" id="clicks-display">0</div>
+                        <div class="text-center mb-3"><button class="btn btn-click" id="main-click-btn" data-lang-key="main_click_btn">...</button></div>
+                        <div class="stat-grid">
+                            <div class="stat-box"><div class="stat-value" id="cps-display">0</div><div class="stat-label" data-lang-key="stat_cps">...</div></div>
+                            <div class="stat-box"><div class="stat-value" id="cpc-display">1</div><div class="stat-label" data-lang-key="stat_cpc">...</div></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 data-lang-key="shop_title" class="!mb-2"><i class="fas fa-store"></i>...</h3>
+                        <div class="flex gap-2 mb-4" id="buy-multiplier-controls">
+                            <button class="btn flex-1 justify-center p-2 text-sm active" style="margin-bottom:0;" data-multiplier="1">x1</button>
+                            <button class="btn flex-1 justify-center p-2 text-sm" style="margin-bottom:0;" data-multiplier="10">x10</button>
+                            <button class="btn flex-1 justify-center p-2 text-sm" style="margin-bottom:0;" data-multiplier="100">x100</button>
+                            <button class="btn flex-1 justify-center p-2 text-sm" style="margin-bottom:0;" data-multiplier="max">MAX</button>
+                        </div>
+                        <div id="shop-container"></div>
+                    </div>
+                    <div class="card">
+                        <h3 data-lang-key="boosters_title"><i class="fas fa-rocket"></i>...</h3>
+                        <div id="boosters-container" class="flex flex-col gap-3">
+                            <div>
+                                <button class="btn" id="booster-click-frenzy">
+                                    <span class="item-info"><i class="fas fa-bolt" style="color:var(--prestige)"></i><span data-lang-key="booster_frenzy_name">...</span></span>
+                                    <span id="booster-click-frenzy-timer">...</span>
+                                </button>
+                                <p class="small text-center mt-2" data-lang-key="booster_frenzy_desc">...</p>
+                            </div>
+                            <div>
+                                <button class="btn" id="booster-doubled-cps">
+                                    <span class="item-info"><i class="fas fa-layer-group" style="color:var(--success)"></i><span data-lang-key="booster_doubled_cps_name">...</span></span>
+                                    <span id="booster-doubled-cps-timer">...</span>
+                                </button>
+                                <p class="small text-center mt-2" data-lang-key="booster_doubled_cps_desc">...</p>
+                            </div>
+                            <div>
+                                <button class="btn" id="booster-time-warp">
+                                    <span class="item-info"><i class="fas fa-history" style="color:var(--info)"></i><span data-lang-key="booster_time_warp_name">...</span></span>
+                                    <span id="booster-time-warp-timer">...</span>
+                                </button>
+                                <p class="small text-center mt-2" data-lang-key="booster_time_warp_desc">...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="clans" class="tab-content card" style="display: none;">
+                    <h3 data-lang-key="clans_title"><i class="fas fa-users"></i>...</h3>
+                    
+                    <div id="clan-dashboard-view" style="display:none;">
+                        <h3 id="clan-name-display" class="text-accent text-2xl justify-center border-none">...</h3>
+                        <div class="stat-grid mb-4">
+                            <div class="stat-box"><div id="clan-member-count" class="stat-value">0</div><div class="stat-label" data-lang-key="clans_members">...</div></div>
+                            <div class="stat-box"><div id="clan-treasury-display" class="stat-value">0</div><div class="stat-label" data-lang-key="clans_treasury">...</div></div>
+                        </div>
+                        
+                        <!-- START: Clan War Section -->
+                        <div id="clan-war-container" class="mt-4 border-t border-gray-700 pt-4">
+                            <h3 data-lang-key="clans_war_title"><i class="fas fa-skull-crossbones"></i>...</h3>
+                            
+                            <div id="clan-war-active-view" style="display: none;">
+                                <h4 id="clan-war-boss-name" class="text-xl text-center font-bold" style="color: var(--danger);">...</h4>
+                                <div class="stat-box w-full mb-2">
+                                    <div id="clan-war-boss-health" class="stat-value text-2xl" style="color:var(--danger)">...</div>
+                                    <div class="stat-label" data-lang-key="clans_war_boss_health">...</div>
+                                </div>
+                                <div class="w-full bg-gray-800 rounded-full h-4 mb-2">
+                                    <div id="clan-war-health-bar" class="h-4 rounded-full transition-all duration-500" style="background-color: var(--danger); width: 100%"></div>
+                                </div>
+                                <p class="text-center small mb-2" data-lang-key="clans_war_ends_in">... <span id="clan-war-timer">--:--:--</span></p>
+
+                                <button id="clan-war-attack-btn" class="btn justify-center" style="background-color: var(--accent);">
+                                    <span data-lang-key="clans_war_attack_btn">...</span>
+                                </button>
+                                <p class="text-center small mt-1" data-lang-key="clans_war_my_damage">... <span id="clan-war-my-damage">0</span></p>
+                                <p id="clan-war-attack-cooldown" class="text-center small" style="color:var(--warning); display:none;"></p>
+                            </div>
+
+                            <div id="clan-war-inactive-view" style="display: none;">
+                                <p class="text-center mb-4" data-lang-key="clans_war_no_war">...</p>
+                                <button id="clan-war-start-btn" class="btn justify-center" style="background-color: var(--success);" data-lang-key="clans_war_start_btn">...</button>
+                            </div>
+                             <div id="clan-war-cooldown-view" style="display: none;">
+                                <p class="text-center mb-2" data-lang-key="clans_war_on_cooldown">...</p>
+                                <p id="clan-war-global-cooldown-timer" class="text-center text-xl font-bold text-accent">--:--:--</p>
+                            </div>
+                        </div>
+                        <!-- END: Clan War Section -->
+
+                        <div class="border-t border-gray-700 pt-4 mt-4">
+                            <h3 data-lang-key="clans_donate_title"><i class="fas fa-hand-holding-usd"></i>...</h3>
+                            <div class="flex gap-2 mb-4">
+                               <input type="number" id="clan-donate-input" class="form-input flex-grow" data-lang-placeholder="clans_donate_placeholder">
+                               <button id="clan-donate-btn" class="main-button" style="padding: 0 1rem;" data-lang-key="clans_donate_btn">...</button>
+                            </div>
+                            
+                            <h3 data-lang-key="clans_upgrades_title"><i class="fas fa-shield-alt"></i>...</h3>
+                            <div id="clan-upgrades-container" class="flex flex-col gap-2 mb-4"></div>
+
+                            <h3 data-lang-key="clans_members"><i class="fas fa-user-friends"></i>...</h3>
+                            <ul id="clan-member-list" class="list-none p-0 mb-4"></ul>
+                            <button id="clan-leave-btn" class="btn justify-center" style="background-color: var(--danger);" data-lang-key="clans_leave_btn">...</button>
+                        </div>
+                    </div>
+
+                    <div id="clan-join-create-view" style="display:none;">
+                        <p class="text-center mb-4" data-lang-key="clans_not_in_clan">...</p>
+                        <h3 data-lang-key="clans_create_title"><i class="fas fa-plus-circle"></i>...</h3>
+                        <div class="flex gap-2">
+                           <input id="clan-name-input" class="form-input flex-grow" data-lang-placeholder="clans_name_placeholder">
+                           <button id="clan-create-btn" class="main-button" style="padding: 0 1rem;" data-lang-key="clans_create_btn">...</button>
+                        </div>
+                         <p class="text-center my-4 text-muted" data-lang-key="clans_join_wip">...</p>
+                    </div>
+                </div>
+                <div id="chat" class="tab-content card" style="display: none;">
+                    <h3 data-lang-key="tab_chat"><i class="fas fa-comments"></i>...</h3>
+                    <div id="chat-messages"></div>
+                    <div id="chat-input-area">
+                        <input type="text" id="chat-input" class="form-input flex-grow" maxlength="150" data-lang-placeholder="chat_placeholder">
+                        <button id="chat-send-btn" class="main-button" style="padding: 0 1.2rem;"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+                <div id="other-games" class="tab-content" style="display: none; flex-direction: column; gap: 12px;">
+                    <div class="card"><h3 data-lang-key="minigames_select_title"><i class="fas fa-gamepad"></i>...</h3><p class="small mb-4" data-lang-key="minigames_select_desc">...</p><div class="game-grid"><div class="game-card" data-game="minesweeper"><i class="fas fa-bomb"></i><p data-lang-key="minigame_minesweeper">...</p></div><div class="game-card" data-game="tictactoe"><i class="fas fa-times"></i><p data-lang-key="minigame_tictactoe">...</p></div><div class="game-card" data-game="flappybird"><i class="fas fa-dove"></i><p data-lang-key="minigame_flappybird">...</p></div></div></div>
+                    <div id="minesweeper-game" class="card" style="display: none;"><h3 class="mb-3" data-lang-key="minigame_minesweeper"><i class="fas fa-bomb"></i>...</h3><p id="minesweeper-stats"><span data-lang-key="minesweeper_mines">...</span>: <span id="minesweeper-mines">15</span> / <span data-lang-key="minesweeper_time">...</span>: <span id="minesweeper-timer">0</span></p><div id="minesweeper-board"></div><button class="main-button mt-4" id="minesweeper-reset" data-lang-key="minigame_new_game">...</button></div>
+                    <div id="tictactoe-game" class="card" style="display: none;"><h3 class="mb-3" data-lang-key="minigame_tictactoe"><i class="fas fa-times"></i>...</h3><p id="tictactoe-status">...</p><div id="tic-tac-toe-board"></div><button class="main-button mt-4" id="tictactoe-reset" data-lang-key="minigame_new_game">...</button></div>
+                    <div id="flappybird-game" class="card" style="display: none;"><h3 class="mb-3" data-lang-key="minigame_flappybird"><i class="fas fa-dove"></i>...</h3><div id="flappy-bird-container"><div id="flappy-bird-bird"></div><div id="flappy-bird-score">0</div><button id="flappy-bird-start" data-lang-key="minigame_start">...</button></div></div>
+                </div>
+                <div id="prestige" class="tab-content card" style="display: none;"><h3 data-lang-key="prestige_title"><i class="fas fa-star" style="color:var(--prestige)"></i>...</h3><p class="small mb-4" data-lang-key="prestige_desc">...</p><div class="stat-box w-full mb-4"><div class="stat-label" data-lang-key="prestige_req">...</div><div class="stat-value" id="prestige-requirement-display"></div></div><div class="progress-bar-container"><div id="prestige-progress-bar" class="progress-bar"></div></div><div class="stat-box w-full mb-4"><div class="stat-label" data-lang-key="prestige_gain">...</div><div class="stat-value" id="prestige-gain-display" style="color:var(--prestige)"></div></div><button class="btn" id="prestige-btn" data-lang-key="prestige_btn">...</button></div>
+                <div id="ascension" class="tab-content" style="display: none; flex-direction: column; gap: 12px;">
+                    <div class="card">
+                        <h3 data-lang-key="ascension_title"><i class="fas fa-infinity" style="color:var(--info)"></i>...</h3>
+                        <p class="small mb-4 text-center" data-lang-key="ascension_desc">...</p>
+                        
+                        <div id="ascension-action-container">
+                            <div class="stat-box w-full mb-4">
+                                <div class="stat-label" data-lang-key="ascension_req">...</div>
+                                <div class="stat-value" id="ascension-req-display"></div>
+                            </div>
+                            <div class="stat-box w-full mb-4">
+                                <div class="stat-label" data-lang-key="ascension_gain">...</div>
+                                <div class="stat-value" id="ascension-gain-display" style="color:var(--info)"></div>
+                            </div>
+                            <button class="btn" id="ascend-btn" data-lang-key="ascension_btn">...</button>
+                        </div>
+                    </div>
+
+                    <div class="card" id="ascension-upgrades-section" style="display: none;">
+                        <h3 data-lang-key="ascension_upgrades_title"><i class="fas fa-atom"></i>...</h3>
+                        <div class="stat-box w-full mb-4">
+                            <div class="stat-label" data-lang-key="currency_shards">...</div>
+                            <div class="stat-value" id="ascension-shards-display" style="color:var(--info)">0</div>
+                        </div>
+                        <div id="ascension-upgrades-container" class="flex flex-col gap-3"></div>
+                    </div>
+                </div>
+                <div id="upgrades" class="tab-content card" style="display: none;">
+                    <h3 data-lang-key="upgrades_title"><i class="fas fa-bolt"></i>...</h3>
+                    <p class="small mb-4" data-lang-key="upgrades_desc">...</p>
+                    <div id="prestige-skill-tree-wrapper">
+                        <svg id="prestige-tree-lines"></svg>
+                        <div id="prestige-skill-tree">
+                            <!-- Узлы дерева будут генерироваться здесь JS-ом -->
+                        </div>
+                    </div>
+                </div>
+                <div id="achievements" class="tab-content card" style="display: none;">
+                    <h3 data-lang-key="achievements_title"><i class="fas fa-gem"></i>...</h3><p class="small mb-4" data-lang-key="achievements_desc">...</p>
+                    <div class="card mb-4"><h3 data-lang-key="global_bonus_title"><i class="fas fa-globe"></i>...</h3><div class="stat-box w-full"><div class="stat-value" id="global-bonus-display">1.00x</div><div class="stat-label" data-lang-key="global_bonus_from_achievements">...</div></div></div>
+                    <div id="achievements-grid"></div>
+                </div>
+                <div id="leaderboard" class="tab-content card" style="display: none;">
+                    <h3 data-lang-key="leaderboard_title"><i class="fas fa-trophy"></i>...</h3>
+                    <div class="flex gap-2 mb-4"><button class="btn flex-1 justify-center active" id="lb-btn-clicks" data-lang-key="leaderboard_total_clicks">...</button><button class="btn flex-1 justify-center" id="lb-btn-prestige" data-lang-key="leaderboard_prestige_level">...</button></div>
+                    <p id="leaderboard-loading" class="text-center" data-lang-key="leaderboard_loading">...</p>
+                    <ul id="leaderboard-list" class="list-none p-0"></ul>
+
+                    <div id="leaderboard-debugger" class="mt-6 border-t border-gray-700 pt-4">
+                        <h3 class="!border-none" data-lang-key="debug_title"><i class="fas fa-bug"></i> ...</h3>
+                        <p class="small mb-4" data-lang-key="debug_desc">...</p>
+                        <button id="run-debug-btn" class="btn justify-center" style="margin-bottom: 1rem;" data-lang-key="debug_run_btn">...</button>
+                        <div id="debug-output" class="text-left p-3 bg-black bg-opacity-30 rounded-lg text-sm whitespace-pre-wrap font-mono" style="min-height: 100px;"></div>
+                    </div>
+                </div>
+                <div id="profile" class="tab-content" style="display: none; flex-direction: column; gap: 12px;">
+                    <div class="card">
+                        <h3 data-lang-key="profile_title"><i class="fas fa-user-circle"></i>...</h3>
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="avatar-large" id="profile-avatar-large"><i class="fas fa-user"></i></div>
+                            <div class="flex-grow">
+                                <h4 id="profile-username" class="text-2xl font-bold">...</h4>
+                                <p id="profile-title-display" class="text-accent">...</p>
+                            </div>
+                        </div>
+                        
+                        <p class="small mb-2" data-lang-key="profile_avatar_url_desc">...</p>
+                        <div class="flex gap-2">
+                           <input id="avatar-url-input" class="form-input flex-grow" data-lang-placeholder="profile_upload_avatar_url_placeholder">
+                           <button id="avatar-url-btn" class="main-button" style="padding: 0 1rem;" data-lang-key="profile_avatar_url_btn">Set</button>
+                        </div>
+
+                    </div>
+                    <div class="card">
+                        <h3 data-lang-key="profile_titles_title"><i class="fas fa-award"></i>...</h3>
+                        <p class="small mb-3" data-lang-key="profile_titles_desc">...</p>
+                        <select id="title-selector" class="form-input"></select>
+                    </div>
+                    <div class="card">
+                        <h3 data-lang-key="profile_artifacts_title"><i class="fas fa-gem"></i>...</h3>
+                        <div id="artifacts-grid"></div>
+                    </div>
+                    <div class="card"><h3 data-lang-key="profile_main_stats_title"><i class="fas fa-chart-bar"></i>...</h3><div class="stat-box w-full mb-2.5"><div class="stat-value" id="total-clicks-display">0</div><div class="stat-label" data-lang-key="stat_total_clicks">...</div></div><div class="stat-box w-full mb-2.5"><div class="stat-value" id="prestige-level-display" style="color:var(--prestige)">0</div><div class="stat-label" data-lang-key="stat_prestige_level">...</div></div><div class="stat-box w-full mb-2.5"><div class="stat-value" id="prestige-points-display" style="color:var(--prestige)">0</div><div class="stat-label" data-lang-key="stat_prestige_points">...</div></div><div class="stat-box w-full"><div class="stat-value" id="prestige-bonus-display">1.0x</div><div class="stat-label" data-lang-key="stat_prestige_bonus">...</div></div></div>
+                    <div class="card"><h3 data-lang-key="profile_detailed_stats_title"><i class="fas fa-diagnoses"></i>...</h3><div id="detailed-stats-container" class="grid grid-cols-2 gap-2"></div></div>
+                </div>
+                <div id="quests" class="tab-content card" style="display: none;"><h3 data-lang-key="quests_title"><i class="fas fa-tasks"></i>...</h3><p class="small mb-4" data-lang-key="quests_desc">...</p><div id="quest-list"></div></div>
+                <div id="settings" class="tab-content card" style="display: none;">
+                    <h3 data-lang-key="settings_appearance_title"><i class="fas fa-palette"></i>...</h3>
+                    <p class="small mb-3" data-lang-key="settings_accent_color_desc">...</p>
+                    <div id="color-swatches-container" class="color-swatches"></div>
+                    
+                    <h3 class="mt-6" data-lang-key="settings_font_style_title"><i class="fas fa-font"></i>...</h3>
+                    <p class="small mb-3" data-lang-key="settings_font_desc">...</p>
+                    <select id="font-selector" class="form-input mb-4" style="margin-bottom: 1rem;"></select>
+                    
+                    <p class="small mb-3" data-lang-key="settings_presets_desc">...</p>
+                    <div id="style-presets-container" class="grid grid-cols-3 gap-3"></div>
+
+                    <h3 class="mt-6" data-lang-key="settings_general_title"><i class="fas fa-cogs"></i>...</h3>
+                    <div class="mb-4"><p class="small mb-3" data-lang-key="settings_language_desc">...</p><div class="flex gap-2"><button class="btn flex-1 justify-center" id="lang-en-btn">English</button><button class="btn flex-1 justify-center" id="lang-ru-btn">Русский</button></div></div>
+                    <button class="btn" id="toggle-sound-btn"><span class="item-info"><i class="fas fa-volume-up"></i><span id="sound-status-text">...</span></span></button><button class="btn" id="toggle-graphics-btn"><span class="item-info"><i class="fas fa-leaf"></i><span id="graphics-status-text">...</span></span></button>
+                </div>
+                <div id="development" class="tab-content card" style="display: none;">
+                    <h3 data-lang-key="dev_title"><i class="fas fa-flask"></i>...</h3><p class="mb-4" data-lang-key="dev_desc">...</p><p class="font-bold text-center mb-6 text-lg text-accent" data-lang-key="dev_wip">...</p>
+                    <h3 class="mt-6" data-lang-key="dev_changelog_title"><i class="fas fa-history"></i>...</h3>
+                    <div id="changelog-container"></div>
+                    <h3 class="mt-6" data-lang-key="dev_glossary_title"><i class="fas fa-book"></i>...</h3><p class="small mb-2" data-lang-key="dev_glossary_desc">...</p>
+                </div>
+            </div>
+            <div class="right-column" style="display:none;"></div>
+        </div>
+    </div>
+    
+<script>
+(function(){
+  if (window.__FALLBACK_LANG_INJECTED) return;
+  window.__FALLBACK_LANG_INJECTED = true;
+  const fallback = {
+    en: { title: "Firebase Clicker Evolved", loading_server: "Connecting to servers...", splash_title: "Project Notice", splash_desc: "Welcome — continuing...", splash_btn: "Continue", main_click_btn: "Click!" },
+    ru: { title: "Firebase Clicker Evolved", loading_server: "Подключение к серверам...", splash_title: "Уведомление о проекте", splash_desc: "Добро пожаловать — продолжаем...", splash_btn: "Продолжить", main_click_btn: "Клик!" }
+  };
+  function applyFallback(lang){
+    const strings = fallback[lang] || fallback.en;
+    document.querySelectorAll("[data-lang-key]").forEach(el => {
+      const key = el.getAttribute("data-lang-key");
+      if (!key) return;
+      const txt = (el.textContent || '').trim();
+      if (txt === '' || txt === '.' || txt === '...' ) {
+        if (strings[key]) el.innerHTML = strings[key];
+      }
+    });
+    document.querySelectorAll("[data-lang-placeholder]").forEach(el => {
+      const key = el.getAttribute("data-lang-placeholder");
+      if (!key) return;
+      if (!el.placeholder) {
+         const v = strings[key];
+         if (v) el.placeholder = v;
+      }
+    });
+    if (strings.title) document.title = strings.title;
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ()=>applyFallback('en'));
+  else applyFallback('en');
+})();
+</script>
+<script type="module" id="game-script">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+        import { getDatabase, ref, set, get, query, orderByChild, limitToLast, push, update, increment, onChildAdded, off, serverTimestamp, onValue } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+        import { getStorage, ref as sref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
+let CropperLib = null;
+(async () => {
+    try {
+        const m = await import('https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js');
+        CropperLib = m.default || m;
+        if (CropperLib && CropperLib.Cropper) CropperLib = CropperLib.Cropper;
+        window.Cropper = CropperLib;
+    } catch (e1) {
+        try {
+            await new Promise((res, rej) => {
+                const s = document.createElement('script');
+                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js';
+                s.onload = res; s.onerror = rej;
+                document.head.appendChild(s);
+            });
+            CropperLib = window.Cropper || null;
+        } catch (e2) {
+            console.warn('Cropper import failed. Avatar editor disabled.', e1, e2);
+            window.Cropper = null;
+        }
+    }
+})();
+
+        const firebaseConfig = { apiKey: "AIzaSyAPFBkLQI7Voacyx-168aE1mzKMXVOK0Mo", authDomain: "trata-2041c.firebaseapp.com", projectId: "trata-2041c", storageBucket: "trata-2041c.appspot.com", messagingSenderId: "898017349460", appId: "1:898017349460:web:324bb49f7aaf1430b682c1" };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+        const storage = getStorage(app);
+
+        const D = id => document.getElementById(id);
+        const formatNumber = n => { n = Math.floor(n); if (n < 1e3) return n.toString(); if (n > 1e21) return n.toExponential(2); const s = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp']; const i = Math.floor(Math.log(n) / Math.log(1000)); return `${parseFloat((n / Math.pow(1000, i)).toFixed(2))}${s[i]}`; };
+        const hexToRgb = hex => { const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex); return r ? `${parseInt(r[1], 16)}, ${parseInt(r[2], 16)}, ${parseInt(r[3], 16)}` : null; };
+        const formatTime = s => { if(s < 0) s = 0; const h=Math.floor(s/3600).toString().padStart(2,'0'),m=Math.floor(s%3600/60).toString().padStart(2,'0'),c=Math.floor(s%60).toString().padStart(2,'0'); return `${h}:${m}:${c}`; };
+        
+        const languageStrings = {
+            en: {
+                title: "Firebase Clicker Evolved v4.6",
+                loading_server: "Connecting to servers...",
+                auth_login_title: "Login",
+                auth_register_title: "Register",
+                auth_username_placeholder: "Username (for registration)",
+                auth_email_placeholder: "Email",
+                auth_password_placeholder: "Password",
+                auth_login_btn: "Login",
+                auth_register_btn: "Register",
+                auth_toggle_register_text: 'No account? <a href="#" class="text-indigo-400">Register</a>',
+                auth_toggle_login_text: 'Already have an account? <a href="#" class="text-indigo-400">Login</a>',
+                splash_title: "Project Notice",
+                splash_desc: "Greetings! This project is currently undergoing public access testing. Updates will be deployed on a daily basis.",
+                splash_btn: "Continue",
+                btn_continue: "Continue",
+                tab_game: "Game",
+                tab_minigames: "Mini-Games",
+                tab_prestige: "Prestige",
+                tab_ascension: "Ascension",
+                tab_upgrades: "Upgrades",
+                tab_achievements: "Achievements",
+                tab_leaderboard: "Leaderboard",
+                tab_profile: "Profile",
+                tab_quests: "Quests",
+                tab_settings: "Settings",
+                tab_development: "Development",
+                tab_clans: "Clans",
+                tab_chat: "Chat",
+                chat_placeholder: "Type your message...",
+                main_click_btn: "Click!",
+                stat_cps: "Clicks/sec",
+                stat_cpc: "Clicks/click",
+                shop_title: "Shop",
+                boosters_title: "Boosters",
+                booster_frenzy_name: "Click Frenzy",
+                booster_frenzy_desc: "Increases click power by 5x for 10 seconds.",
+                booster_doubled_cps_name: "Doubled Production",
+                booster_doubled_cps_desc: "Doubles your Clicks-per-Second for 30 seconds.",
+                booster_time_warp_name: "Time Warp",
+                booster_time_warp_desc: "Instantly gain clicks equal to 2 hours of your CPS.",
+                booster_ready: "Ready!",
+                booster_active: "Active:",
+                booster_cooldown: "CD:",
+                minigames_select_title: "Select a Mini-Game",
+                minigames_select_desc: "Bored of clicking? Here's some entertainment!",
+                minigame_minesweeper: "Minesweeper",
+                minigame_tictactoe: "Tic-Tac-Toe",
+                minigame_flappybird: "Flappy Bird",
+                minigame_new_game: "New Game",
+                minigame_start: "START",
+                minesweeper_mines: "Mines",
+                minesweeper_time: "Time",
+                tictactoe_your_turn: "Your turn (X)!",
+                tictactoe_cpu_turn: "Computer's turn (O)...",
+                tictactoe_you_win: "You won!",
+                tictactoe_cpu_win: "Computer won!",
+                tictactoe_draw: "It's a draw!",
+                prestige_title: "Prestige",
+                prestige_desc: "Reset your progress on upgrades to gain Prestige Points and permanent bonuses.",
+                prestige_req: "Clicks required for prestige",
+                prestige_gain: "Prestige points on reset",
+                prestige_btn: "Enter Prestige",
+                ascension_title: "Ascension",
+                ascension_desc: "Reach Prestige Level 100 to Ascend. This will perform a full reset (including Prestige) in exchange for Singularity Shards and powerful meta-upgrades.",
+                ascension_req: "Required Prestige Level",
+                ascension_gain: "Shards on Ascension",
+                ascension_btn: "Ascend",
+                ascension_upgrades_title: "Singularity Upgrades",
+                au_fastStart_name: "Fast Start",
+                au_fastStart_desc: "Start every Prestige run with 5 free Prestige Points.",
+                au_freeFoundation_name: "Free Foundation",
+                au_freeFoundation_desc: "The first 10 levels of each building in the shop are free. Each level of this upgrade adds another 10 free levels.",
+                au_prestigeMemory_name: "Prestige Memory",
+                au_prestigeMemory_desc: "Retain one random Prestige Upgrade after prestiging. Each level adds one more retained upgrade.",
+                notif_ascend: "You have Ascended! Level {0}. +{1} Singularity Shards!",
+                currency_shards: "Singularity Shards",
+                upgrades_title: "Special Upgrades",
+                upgrades_desc: "Spend Prestige Points on powerful permanent upgrades.",
+                achievements_title: "Achievements",
+                achievements_desc: "Unlock achievements to get a permanent income bonus.",
+                leaderboard_title: "Leaderboard",
+                leaderboard_loading: "Loading data...",
+                leaderboard_empty: "Leaderboard is empty.",
+                leaderboard_total_clicks: "By Total Clicks",
+                leaderboard_prestige_level: "By Prestige Level",
+                profile_title: "Player Profile",
+                profile_avatar_url_desc: "Set your avatar using an image URL.",
+                profile_avatar_url_btn: "Set",
+                profile_upload_avatar_url_placeholder: "Paste image URL and press Set",
+                profile_main_stats_title: "Main Stats",
+                profile_titles_title: "Titles",
+                profile_titles_desc: "Select a title to display on your profile.",
+                profile_artifacts_title: "Artifacts",
+                stat_total_clicks: "Total Clicks (All Time)",
+                stat_prestige_level: "Prestige Level",
+                stat_prestige_points: "Prestige Points",
+                stat_prestige_bonus: "Prestige Bonus",
+                profile_detailed_stats_title: "Detailed Stats",
+                stat_time_played: "Time Played",
+                stat_manual_clicks: "Manual Clicks",
+                stat_crit_clicks: "Critical Clicks",
+                stat_upgrades_purchased: "Upgrades Purchased",
+                stat_frenzy_activations: "Frenzy Activations",
+                stat_prestiges_done: "Prestiges",
+                stat_golden_clicked: "Golden Clickers Clicked",
+                stat_clicks_donated: "Clicks Donated",
+                quests_title: "Quests",
+                quests_desc: "Complete quests to receive rewards.",
+                settings_appearance_title: "Appearance Settings",
+                settings_accent_color_desc: "Select an accent color for the interface:",
+                settings_font_style_title: "Font & Style",
+                settings_font_desc: "Choose your interface font:",
+                settings_presets_desc: "Save or load your color and font combinations:",
+                preset_load: "Load",
+                preset_save: "Save",
+                settings_general_title: "General Settings",
+                settings_language_desc: "Select Language:",
+                sound_on: "Sounds: On",
+                sound_off: "Sounds: Off",
+                graphics_full: "Graphics: Full",
+                graphics_simple: "Graphics: Simple",
+                dev_title: "Development",
+                dev_desc: "This tab contains information about future game development.",
+                dev_wip: "Expect updates!",
+                dev_changelog_title: "Update History",
+                dev_glossary_title: "Glossary",
+                dev_glossary_desc: "Definitions for key game terms will be collected here. Coming soon!",
+                clans_title: "Clans",
+                clans_not_in_clan: "You are not part of a clan. Create one or join an existing one!",
+                clans_create_title: "Create a Clan",
+                clans_name_placeholder: "Clan Name",
+                clans_create_btn: "Create",
+                clans_join_wip: "Clan search functionality is coming soon!",
+                clans_members: "Members",
+                clans_leave_btn: "Leave Clan",
+                clans_treasury: "Clan Treasury",
+                clans_donate_title: "Donate to Treasury",
+                clans_donate_placeholder: "Amount to donate",
+                clans_donate_btn: "Donate",
+                clans_upgrades_title: "Clan Upgrades",
+                clans_war_title: "Clan War",
+                clans_war_boss_health: "Boss Health",
+                clans_war_ends_in: "War ends in:",
+                clans_war_attack_btn: "Attack (1 min)",
+                clans_war_my_damage: "Your damage:",
+                clans_war_no_war: "There is no active war.",
+                clans_war_start_btn: "Start War",
+                clans_war_on_cooldown: "Next war can be started in:",
+                clans_war_your_hp: "YOUR HP",
+                clans_war_time_left: "TIME LEFT",
+                clans_war_damage_dealt: "Damage dealt:",
+                clans_war_attack_cd_msg: "You can attack again in: {0}",
+                notif_welcome_back: "Welcome back, {0}!",
+                notif_new_game: "Welcome! Starting a new game!",
+                notif_load_fail: "Failed to load progress. Error: {0}",
+                notif_save_fail: "Save failed!",
+                notif_quest_complete: "Quest Complete: {0}!",
+                notif_achievement_unlocked: "Achievement Unlocked: {0}!",
+                notif_prestige: "Prestige! Level {0}. +{1} Prestige Points!",
+                notif_leaderboard_fail: "Error loading leaderboard.",
+                notif_frenzy_active: "Click Frenzy activated!",
+                notif_doubled_cps_active: "Doubled Production activated!",
+                notif_time_warp_active: "Time Warp! +{0} clicks!",
+                notif_daily_reward: "Reward claimed! +1 Prestige Point!",
+                notif_avatar_uploading: "Updating avatar...",
+                notif_avatar_fail: "Update failed! Invalid URL.",
+                notif_avatar_success: "Avatar updated!",
+                notif_minesweeper_win: "You won Minesweeper!",
+                notif_minesweeper_lose: "You lost Minesweeper!",
+                notif_flappy_end: "Game over! You scored {0} points!",
+                notif_clan_created: "Clan '{0}' created successfully!",
+                notif_clan_left: "You have left the clan.",
+                notif_clan_fail: "Clan operation failed. Please try again.",
+                notif_clan_donated: "Successfully donated {0} clicks to the treasury!",
+                notif_clan_donation_fail: "Donation failed. Not enough clicks.",
+                notif_clan_upgrade_success: "Clan upgrade purchased!",
+                notif_clan_upgrade_fail: "Upgrade failed. Not enough clicks in treasury.",
+                notif_clan_war_started: "Clan War has begun! Defeat the {0}!",
+                notif_clan_war_win: "VICTORY! The clan has defeated the boss!",
+                notif_clan_war_lose: "DEFEAT! The boss has escaped...",
+                notif_preset_saved: "Style preset saved to slot {0}!",
+                notif_preset_loaded: "Style preset loaded from slot {0}!",
+                notif_preset_empty: "Slot {0} is empty!",
+                notif_golden_click_1: "Golden Clicker! +{0} clicks!",
+                notif_golden_click_2: "LUCKY! Your CPS is doubled for 20 seconds!",
+                notif_artifact_found: "Artifact Found: {0}!",
+                daily_reward_title: "Daily Reward!",
+                daily_reward_desc: "Thanks for checking in! Here is your reward for today:",
+                daily_reward_value: "+1 Prestige Point",
+                daily_reward_btn: "Claim!",
+                offline_title: "Offline Progress",
+                offline_desc_1: "While you were away...",
+                offline_time_away: "Time Away",
+                offline_base_earnings: "Base Earnings (from CPS)",
+                offline_bonus_earnings: "Bonus Earnings (from Upgrades)",
+                offline_total_earnings: "Total Clicks Earned",
+                quest_status_completed: "Completed!",
+                quest_status_inprogress: "In Progress",
+                confirm_logout: "Are you sure you want to log out?",
+                confirm_prestige: "Are you sure you want to prestige? Your progress (upgrades and clicks) will be reset, and you will receive {0} prestige points.",
+                confirm_clan_leave: "Are you sure you want to leave the clan?",
+                max_level: "MAX",
+                tamper_title: "Integrity Check Failed",
+                tamper_desc: "Client-side code modification has been detected. The application has been halted to maintain system integrity. Please reload the page to restore functionality.",
+                global_bonus_title: "Global Bonus",
+                global_bonus_from_achievements: "From Achievements",
+                avatar_editor_title: "Edit Avatar",
+                btn_cancel: "Cancel",
+                btn_confirm: "Confirm",
+                debug_title: "Leaderboard Debugger",
+                debug_desc: "If the leaderboard isn't loading, run this diagnostic tool to find the cause.",
+                debug_run_btn: "Run Diagnostics",
+                u_names: {cpc:"Cursor", cps1:"Auto-Clicker", cps2:"Click Farm", cps3:"Supercomputer", cps4:"Quantum AI", cps5:"Galactic Hub", cps6:"Singularity Core", cps7:"Chrono-Forge", cps8:"Black Hole Farm", cps9:"Quantum Core", goldenClick:"Golden Click", efficientMachines:"Efficient Machines", luckyCharm:"Lucky Charm", offlineMastery:"Offline Mastery", globalPrestigeBoost:"Prestige Boost", beyondTime:"Beyond Time", criticalImpulse:"Critical Impulse", goldenChance: "Golden Chance", goldenTime: "Golden Time", goldenFortune: "Golden Fortune"},
+                u_descs: {cpc:"Increases clicks per manual click by 1.", cps1:"Generates 1 click per second.", cps2:"Generates 8 clicks per second.", cps3:"Generates 47 clicks per second.", cps4:"Generates 260 clicks per second.", cps5:"Generates 1,400 clicks per second.", cps6:"Generates 7,800 clicks per second.", cps7:"Generates 44,000 clicks per second.", cps8:"Generates 250,000 clicks per second.", cps9:"Generates 1,500,000 clicks per second.", goldenClick:"Increases Clicks-per-Click (CPC) by 25% per level.", efficientMachines:"Increases Clicks-per-Second (CPS) by 10% per level.", luckyCharm:"Increases critical click chance by 1% per level.", offlineMastery:"Increases offline earnings by 5% of your CPS per level.", globalPrestigeBoost:"Increases the base prestige bonus by an additional 2% per level.", beyondTime:"Reduces the Click Frenzy cooldown by 5% per level.", criticalImpulse:"Increases critical click multiplier by 10% per level.", goldenChance: "Increases Golden Clicker spawn chance by 10% per level.", goldenTime: "Increases Golden Clicker on-screen duration by 5% per level.", goldenFortune: "Improves the rewards from Golden Clickers by 10% per level."},
+                cu_names: {cpsBonus: "Synergy: CPS", cpcBonus: "Synergy: CPC"},
+                cu_descs: {cpsBonus: "Increases CPS for all clan members by 1% per level.", cpcBonus: "Increases CPC for all clan members by 1% per level."},
+                q_names: {q1:"First Steps", q2:"Automation", q3:"Millionaire", q4:"First Frenzy", q5:"Critical Luck", q6:"Tycoon", q7:"Galactic Miner", q8:"Prestige Beginner", q9:"Game Master", q10:"Power Spender"},
+                q_descs: {q1:"Get 1,000 total clicks.", q2:"Buy 10 Auto-Clickers.", q3:"Reach 1 million total clicks.", q4:"Activate Click Frenzy 3 times.", q5:"Land 100 critical clicks.", q6:"Reach 10 million total clicks.", q7:"Buy 5 Galactic Hubs.", q8:"Reach Prestige level 3.", q9:"Win a game of Tic-Tac-Toe.", q10:"Spend 50 Prestige Points."},
+                a_names: {a1:"Newbie",a2:"Millionaire",a3:"Collector",a4:"Critical Thinker",a5:"Rebirth",a6:"Ten Million",a7:"Click Master",a8:"Automator",a9:"Singularity Core Prototype",a10:"Prestige Addict",a11:"Frenzy Fanatic",a12:"Time Keeper"},
+                a_descs: {a1:"Make 1,000 manual clicks.", a2:"Reach 1 million total clicks.", a3:"Purchase 100 upgrades in total.", a4:"Land 500 critical clicks.", a5:"Prestige for the first time.", a6:"Reach 10 million total clicks.", a7:"Make 10,000 manual clicks.", a8:"Own 500 CPS buildings in total.", a9:"Build your first Singularity Core.", a10:"Reach prestige level 5.", a11:"Activate Click Frenzy 10 times.", a12:"Play for a total of 24 hours."},
+                notif_event_start: "Event started: {0}!",
+                ge_sale_name: "Flash Sale",
+                ge_sale_desc: "All building prices are reduced by 7%!",
+                ge_boom_name: "Production Boom",
+                ge_boom_desc: "All buildings produce 15% more CPS!",
+                ge_echo_name: "Click Echo",
+                ge_echo_desc: "All your manual clicks are 50% more powerful!",
+                t_none: "No Title",
+                t_newbie: "the Newbie",
+                t_tycoon: "the Tycoon",
+                t_prestigious: "the Prestigious",
+                t_ascendant: "the Ascendant",
+                t_beta: "the Beta",
+                t_boss_slayer: "Boss Slayer",
+                t_administrator: "Administrator",
+                art_shard_name: "Quantum Shard",
+                art_shard_desc: "+1% to all CPS production.",
+                art_cog_name: "Golden Cog",
+                art_cog_desc: "+1% to all CPC production.",
+                art_crystal_name: "Time Crystal",
+                art_crystal_desc: "Reduces all booster cooldowns by 2%.",
+            },
+            ru: {
+                title: "Firebase Clicker Evolved v4.6",
+                loading_server: "Подключение к серверам...",
+                auth_login_title: "Вход",
+                auth_register_title: "Регистрация",
+                auth_username_placeholder: "Имя пользователя (для регистрации)",
+                auth_email_placeholder: "Электронная почта",
+                auth_password_placeholder: "Пароль",
+                auth_login_btn: "Войти",
+                auth_register_btn: "Зарегистрироваться",
+                auth_toggle_register_text: 'Нет аккаунта? <a href="#" class="text-indigo-400">Зарегистрируйтесь</a>',
+                auth_toggle_login_text: 'Уже есть аккаунт? <a href="#" class="text-indigo-400">Войдите</a>',
+                splash_title: "Уведомление о проекте",
+                splash_desc: "Здравствуйте! Этот проект еще тестируется в открытом доступе. Обновления будут выходить ежедневно.",
+                splash_btn: "Продолжить",
+                btn_continue: "Продолжить",
+                tab_game: "Игра",
+                tab_minigames: "Мини-игры",
+                tab_prestige: "Престиж",
+                tab_ascension: "Вознесение",
+                tab_upgrades: "Улучшения",
+                tab_achievements: "Достижения",
+                tab_leaderboard: "Лидеры",
+                tab_profile: "Профиль",
+                tab_quests: "Задания",
+                tab_settings: "Настройки",
+                tab_development: "Разработка",
+                tab_clans: "Кланы",
+                tab_chat: "Чат",
+                chat_placeholder: "Введите ваше сообщение...",
+                main_click_btn: "Клик!",
+                stat_cps: "Кликов/сек",
+                stat_cpc: "Кликов/клик",
+                shop_title: "Магазин",
+                boosters_title: "Бустеры",
+                booster_frenzy_name: "Клик-Безумие",
+                booster_frenzy_desc: "Увеличивает силу клика в 5 раз на 10 секунд.",
+                booster_doubled_cps_name: "Удвоение CPS",
+                booster_doubled_cps_desc: "Удваивает ваш доход в секунду (CPS) на 30 секунд.",
+                booster_time_warp_name: "Временная Петля",
+                booster_time_warp_desc: "Мгновенно дает клики, равные 2 часам вашего CPS.",
+                booster_ready: "Готов!",
+                booster_active: "Активен:",
+                booster_cooldown: "КД:",
+                minigames_select_title: "Выбрать Мини-Игру",
+                minigames_select_desc: "Заскучали от кликанья? Вот немного развлечений!",
+                minigame_minesweeper: "Сапёр",
+                minigame_tictactoe: "Крестики-Нолики",
+                minigame_flappybird: "Flappy Bird",
+                minigame_new_game: "Новая игра",
+                minigame_start: "СТАРТ",
+                minesweeper_mines: "Мины",
+                minesweeper_time: "Время",
+                tictactoe_your_turn: "Ваш ход (X)!",
+                tictactoe_cpu_turn: "Ход компьютера (O)...",
+                tictactoe_you_win: "Вы победили!",
+                tictactoe_cpu_win: "Компьютер победил!",
+                tictactoe_draw: "Ничья!",
+                prestige_title: "Престиж",
+                prestige_desc: "Сбросьте прогресс улучшений, чтобы получить Очки Престижа и постоянные бонусы.",
+                prestige_req: "Требуется кликов для престижа",
+                prestige_gain: "Очков престижа после сброса",
+                prestige_btn: "Войти в престиж",
+                ascension_title: "Вознесение",
+                ascension_desc: "Достигните 100-го уровня Престижа, чтобы Вознестись. Это выполнит полный сброс (включая Престиж) в обмен на Осколки Сингулярности и мощные мета-улучшения.",
+                ascension_req: "Требуемый уровень Престижа",
+                ascension_gain: "Осколков при Вознесении",
+                ascension_btn: "Вознестись",
+                ascension_upgrades_title: "Улучшения Сингулярности",
+                au_fastStart_name: "Быстрый старт",
+                au_fastStart_desc: "Начинайте каждый забег Престижа с 5 бесплатными Очками Престижа.",
+                au_freeFoundation_name: "Бесплатный фундамент",
+                au_freeFoundation_desc: "Первые 10 уровней каждого здания в магазине бесплатны. Каждый уровень этого улучшения дает еще 10 бесплатных уровней.",
+                au_prestigeMemory_name: "Память престижа",
+                au_prestigeMemory_desc: "Сохранять одно случайное улучшение Престижа после сброса. Каждый уровень добавляет еще одно сохраняемое улучшение.",
+                notif_ascend: "Вы вознеслись! Уровень {0}. +{1} Осколков Сингулярности!",
+                currency_shards: "Осколки Сингулярности",
+                upgrades_title: "Особые улучшения",
+                upgrades_desc: "Тратьте очки престижа на мощные постоянные улучшения.",
+                achievements_title: "Достижения",
+                achievements_desc: "Разблокируйте достижения, чтобы получить постоянный бонус к доходу.",
+                leaderboard_title: "Таблица лидеров",
+                leaderboard_loading: "Загрузка данных...",
+                leaderboard_empty: "Таблица лидеров пуста.",
+                leaderboard_total_clicks: "По кликам",
+                leaderboard_prestige_level: "По уровню престижа",
+                profile_title: "Профиль игрока",
+                profile_avatar_url_desc: "Установите аватар по URL картинки.",
+                profile_avatar_url_btn: "Установить",
+                profile_upload_avatar_url_placeholder: "Вставьте URL и нажмите 'Установить'",
+                profile_main_stats_title: "Основная Статистика",
+                profile_titles_title: "Титулы",
+                profile_titles_desc: "Выберите титул для отображения в вашем профиле.",
+                profile_artifacts_title: "Артефакты",
+                stat_total_clicks: "Всего кликов (за всё время)",
+                stat_prestige_level: "Уровень престижа",
+                stat_prestige_points: "Очки престижа",
+                stat_prestige_bonus: "Бонус престижа",
+                profile_detailed_stats_title: "Подробная Статистика",
+                stat_time_played: "Время в игре",
+                stat_manual_clicks: "Ручных кликов",
+                stat_crit_clicks: "Крит. кликов",
+                stat_upgrades_purchased: "Куплено улучшений",
+                stat_frenzy_activations: "Активаций безумия",
+                stat_prestiges_done: "Престижей",
+                stat_golden_clicked: "Золотых кликеров нажато",
+                stat_clicks_donated: "Пожертвовано кликов",
+                quests_title: "Задания",
+                quests_desc: "Выполняйте задания для получения наград.",
+                settings_appearance_title: "Настройки Внешнего Вида",
+                settings_accent_color_desc: "Выберите акцентный цвет интерфейса:",
+                settings_font_style_title: "Шрифт и Стиль",
+                settings_font_desc: "Выберите шрифт интерфейса:",
+                settings_presets_desc: "Сохраняйте или загружайте ваши комбинации цвета и шрифта:",
+                preset_load: "Загрузить",
+                preset_save: "Сохранить",
+                settings_general_title: "Общие Настройки",
+                settings_language_desc: "Выберите язык:",
+                sound_on: "Звуки: Вкл",
+                sound_off: "Звуки: Выкл",
+                graphics_full: "Графика: Полная",
+                graphics_simple: "Графика: Простая",
+                dev_title: "Разработка",
+                dev_desc: "Эта вкладка содержит информацию о будущем развитии игры.",
+                dev_wip: "Ожидайте обновлений!",
+                dev_changelog_title: "История Обновлений",
+                dev_glossary_title: "Глоссарий",
+                dev_glossary_desc: "Здесь будут собраны определения основных терминов игры. Скоро!",
+                clans_title: "Кланы",
+                clans_not_in_clan: "Вы не состоите в клане. Создайте свой или вступите в уже существующий!",
+                clans_create_title: "Создать клан",
+                clans_name_placeholder: "Название клана",
+                clans_create_btn: "Создать",
+                clans_join_wip: "Функция поиска кланов появится в ближайшее время!",
+                clans_members: "Участники",
+                clans_leave_btn: "Покинуть клан",
+                clans_treasury: "Казна Клана",
+                clans_donate_title: "Внести в казну",
+                clans_donate_placeholder: "Сумма взноса",
+                clans_donate_btn: "Внести",
+                clans_upgrades_title: "Улучшения Клана",
+                clans_war_title: "Клановая Война",
+                clans_war_boss_health: "Здоровье босса",
+                clans_war_ends_in: "Война закончится через:",
+                clans_war_attack_btn: "Атаковать (1 мин)",
+                clans_war_my_damage: "Ваш урон:",
+                clans_war_no_war: "Сейчас нет активных войн.",
+                clans_war_start_btn: "Начать Войну",
+                clans_war_on_cooldown: "Следующую войну можно начать через:",
+                clans_war_your_hp: "ВАШЕ HP",
+                clans_war_time_left: "ВРЕМЯ",
+                clans_war_damage_dealt: "Нанесено урона:",
+                clans_war_attack_cd_msg: "Вы сможете атаковать снова через: {0}",
+                notif_welcome_back: "С возвращением, {0}!",
+                notif_new_game: "Добро пожаловать! Начинаем новую игру!",
+                notif_load_fail: "Не удалось загрузить прогресс. Ошибка: {0}",
+                notif_save_fail: "Ошибка сохранения!",
+                notif_quest_complete: "Задание выполнено: {0}!",
+                notif_achievement_unlocked: "Достижение открыто: {0}!",
+                notif_prestige: "Престиж! Уровень {0}. +{1} Очков Престижа!",
+                notif_leaderboard_fail: "Ошибка загрузки лидерборда.",
+                notif_frenzy_active: "Клик-Безумие активировано!",
+                notif_doubled_cps_active: "Удвоение CPS активировано!",
+                notif_time_warp_active: "Временная Петля! +{0} кликов!",
+                notif_daily_reward: "Награда получена! +1 Очко Престижа!",
+                notif_avatar_uploading: "Обновление аватара...",
+                notif_avatar_fail: "Ошибка! Неверный URL.",
+                notif_avatar_success: "Аватар обновлен!",
+                notif_minesweeper_win: "Вы выиграли в Сапёра!",
+                notif_minesweeper_lose: "Вы проиграли в Сапёра!",
+                notif_flappy_end: "Игра окончена! Вы набрали {0} очков!",
+                notif_clan_created: "Клан '{0}' успешно создан!",
+                notif_clan_left: "Вы покинули клан.",
+                notif_clan_fail: "Операция с кланом не удалась. Попробуйте снова.",
+                notif_clan_donated: "Вы успешно внесли {0} кликов в казну!",
+                notif_clan_donation_fail: "Взнос не удался. Недостаточно кликов.",
+                notif_clan_upgrade_success: "Улучшение клана куплено!",
+                notif_clan_upgrade_fail: "Покупка не удалась. Недостаточно кликов в казне.",
+                notif_clan_war_started: "Клановая война началась! Победите {0}!",
+                notif_clan_war_win: "ПОБЕДА! Клан одолел босса!",
+                notif_clan_war_lose: "ПОРАЖЕНИЕ! Босс скрылся...",
+                notif_preset_saved: "Стиль сохранен в слот {0}!",
+                notif_preset_loaded: "Стиль загружен из слота {0}!",
+                notif_preset_empty: "Слот {0} пуст!",
+                notif_golden_click_1: "Золотой кликер! +{0} кликов!",
+                notif_golden_click_2: "УДАЧА! Ваш КПС удвоен на 20 секунд!",
+                notif_artifact_found: "Найден артефакт: {0}!",
+                daily_reward_title: "Ежедневная Награда!",
+                daily_reward_desc: "Спасибо, что зашли! Вот ваша награда за сегодня:",
+                daily_reward_value: "+1 Очко Престижа",
+                daily_reward_btn: "Забрать!",
+                offline_title: "Оффлайн Прогресс",
+                offline_desc_1: "Пока вас не было...",
+                offline_time_away: "Время отсутствия",
+                offline_base_earnings: "Базовый доход (от КПС)",
+                offline_bonus_earnings: "Бонусный доход (от улучшений)",
+                offline_total_earnings: "Всего заработано кликов",
+                quest_status_completed: "Выполнено!",
+                quest_status_inprogress: "В процессе",
+                confirm_logout: "Вы уверены, что хотите выйти?",
+                confirm_prestige: "Вы уверены, что хотите войти в престиж? Ваш прогресс (улучшения и клики) будет сброшен, и вы получите {0} очков престижа.",
+                confirm_clan_leave: "Вы уверены что хотите покинуть клан?",
+                max_level: "МАКС.",
+                tamper_title: "Сбой проверки целостности",
+                tamper_desc: "Обнаружена модификация клиентского кода. Работа приложения остановлена для сохранения целостности системы. Пожалуйста, перезагрузите страницу для восстановления функциональности.",
+                global_bonus_title: "Глобальный бонус",
+                global_bonus_from_achievements: "От достижений",
+                avatar_editor_title: "Редактор аватара",
+                btn_cancel: "Отмена",
+                btn_confirm: "Подтвердить",
+                debug_title: "Отладчик Лидерборда",
+                debug_desc: "Если таблица лидеров не загружается, запустите этот инструмент для поиска причины.",
+                debug_run_btn: "Запустить Диагностику",
+                u_names: {cpc:"Курсор", cps1:"Авто-кликер", cps2:"Кликер-ферма", cps3:"Суперкомпьютер", cps4:"Квантовый ИИ", cps5:"Галактический Узел", cps6:"Ядро Сингулярности", cps7:"Хроно-Кузница", cps8:"Ферма черных дыр", cps9:"Квантовое ядро", goldenClick:"Золотой клик", efficientMachines:"Эффективные машины", luckyCharm:"Талисман удачи", offlineMastery:"Оффлайн-мастерство", globalPrestigeBoost:"Усиление престижа", beyondTime:"Вне времени", criticalImpulse:"Критический импульс", goldenChance: "Золотой шанс", goldenTime: "Золотое время", goldenFortune: "Золотая удача"},
+                u_descs: {cpc:"Увеличивает количество кликов за ручной клик на 1.", cps1:"Генерирует 1 клик в секунду.", cps2:"Генерирует 8 кликов в секунду.", cps3:"Генерирует 47 кликов в секунду.", cps4:"Генерирует 260 кликов в секунду.", cps5:"Генерирует 1,400 кликов в секунду.", cps6:"Генерирует 7,800 кликов в секунду.", cps7:"Генерирует 44,000 кликов в секунду.", cps8:"Генерирует 250,000 кликов в секунду.", cps9:"Генерирует 1,500,000 кликов в секунду.", goldenClick:"Увеличивает силу клика (КПК) на 25% за уровень.", efficientMachines:"Увеличивает авто-клик (КПС) на 10% за уровень.", luckyCharm:"Увеличивает шанс критического клика на 1% за уровень.", offlineMastery:"Увеличивает оффлайн-доход на 5% от вашего КПС за уровень.", globalPrestigeBoost:"Увеличивает базовый бонус престижа на доп. 2% за уровень.", beyondTime:"Уменьшает перезарядку Клик-Безумия на 5% за уровень.", criticalImpulse:"Увеличивает множитель критического клика на 10% за уровень.", goldenChance: "Увеличивает шанс появления Золотого кликера на 10% за уровень.", goldenTime: "Увеличивает время жизни Золотого кликера на 5% за уровень.", goldenFortune: "Улучшает награды с Золотых кликеров на 10% за уровень."},
+                cu_names: {cpsBonus: "Синергия: CPS", cpcBonus: "Синергия: CPC"},
+                cu_descs: {cpsBonus: "Увеличивает CPS всех членов клана на 1% за уровень.", cpcBonus: "Увеличивает CPC всех членов клана на 1% за уровень."},
+                q_names: {q1:"Первые шаги", q2:"Автоматизация", q3:"Миллионер", q4:"Первое безумие", q5:"Крит. удача", q6:"Магнат", q7:"Галактический шахтер", q8:"Новичок престижа", q9:"Мастер игр", q10:"Транжира"},
+                q_descs: {q1:"Сделайте 1,000 кликов.", q2:"Купите 10 Авто-кликеров.", q3:"Накопите 1 миллион кликов.", q4:"Активируйте Клик-Безумие 3 раза.", q5:"Сделайте 100 критических кликов.", q6:"Накопите 10 миллионов кликов.", q7:"Купите 5 Галактических Узлов.", q8:"Достигните 3-го уровня престижа.", q9:"Выиграйте партию в Крестики-Нолики.", q10:"Потратьте 50 Очков Престижа."},
+                a_names: {a1:"Новичок",a2:"Миллионер",a3:"Коллекционер",a4:"Критикан",a5:"Перерождение",a6:"Десять миллионов",a7:"Мастер клика",a8:"Автоматор",a9:"Прототип ядра",a10:"Престиж-зависимый",a11:"Безумный кликер",a12:"Хранитель времени"},
+                a_descs: {a1:"Сделайте 1,000 ручных кликов.", a2:"Накопите 1 миллион кликов.", a3:"Купите 100 улучшений.", a4:"Сделайте 500 критических кликов.", a5:"Войдите в престиж в первый раз.", a6:"Накопите 10 миллионов кликов.", a7:"Сделайте 10,000 ручных кликов.", a8:"Имейте 500 зданий, генерирующих КПС.", a9:"Постройте первое Ядро Сингулярности.", a10:"Достигните 5-го уровня престижа.", a11:"Активируйте Клик-Безумие 10 раз.", a12:"Проведите в игре 24 часа."},
+                notif_event_start: "Началось событие: {0}!",
+                ge_sale_name: "Распродажа",
+                ge_sale_desc: "Цены на все здания снижены на 7%!",
+                ge_boom_name: "Производственный бум",
+                ge_boom_desc: "Все здания производят на 15% больше КПС!",
+                ge_echo_name: "Клик-эхо",
+                ge_echo_desc: "Все ваши ручные клики на 50% мощнее!",
+                t_none: "Без титула",
+                t_newbie: "Новичок",
+                t_tycoon: "Магнат",
+                t_prestigious: "Престижный",
+                t_ascendant: "Вознесшийся",
+                t_beta: "Бета-тестер",
+                t_boss_slayer: "Убийца Боссов",
+                t_administrator: "Администратор",
+                art_shard_name: "Квантовый осколок",
+                art_shard_desc: "+1% ко всей продукции КПС.",
+                art_cog_name: "Золотая шестерня",
+                art_cog_desc: "+1% ко всей продукции КПК.",
+                art_crystal_name: "Кристалл времени",
+                art_crystal_desc: "Уменьшает перезарядку всех бустеров на 2%.",
+            }
+        };
+
+        const FONTS = {
+            'Inter': "'Inter', 'Segoe UI', sans-serif",
+            'Roboto': "'Roboto', sans-serif",
+            'Lato': "'Lato', sans-serif",
+            'Montserrat': "'Montserrat', sans-serif",
+            'Open Sans': "'Open Sans', sans-serif",
+            'System': "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+        };
+        const UPGRADES = { 
+            cpc: { icon: 'fa-mouse-pointer', baseCost: 10, costMultiplier: 1.15, action: s => s.cpc += 1 },
+            cps1: { icon: 'fa-robot', baseCost: 100, costMultiplier: 1.2, action: s => s.cps += 1 },
+            cps2: { icon: 'fa-server', baseCost: 1100, costMultiplier: 1.2, action: s => s.cps += 8 },
+            cps3: { icon: 'fa-laptop-code', baseCost: 12000, costMultiplier: 1.25, action: s => s.cps += 47 },
+            cps4: { icon: 'fa-brain', baseCost: 130000, costMultiplier: 1.3, action: s => s.cps += 260 },
+            cps5: { icon: 'fa-satellite-dish', baseCost: 1400000, costMultiplier: 1.35, action: s => s.cps += 1400 },
+            cps6: { icon: 'fa-atom', baseCost: 20000000, costMultiplier: 1.4, action: s => s.cps += 7800 },
+            cps7: { icon: 'fa-hourglass-half', baseCost: 330000000, costMultiplier: 1.45, action: s => s.cps += 44000 },
+            cps8: { icon: 'fa-grip-lines', baseCost: 5000000000, costMultiplier: 1.5, action: s => s.cps += 250000 },
+            cps9: { icon: 'fa-circle-notch', baseCost: 75000000000, costMultiplier: 1.55, action: s => s.cps += 1500000 }
+        };
+        const PRESTIGE_UPGRADES = { 
+            // Row 1: Базовые улучшения
+            goldenClick:       { icon: 'fa-hand-sparkles',   maxLevel: 10, cost: l => Math.pow(2, l), row: 1, col: 1, requires: [] }, 
+            efficientMachines: { icon: 'fa-cogs',            maxLevel: 10, cost: l => Math.pow(5, l), row: 1, col: 3, requires: [] },
+            
+            // Row 2: Зависят от базовых
+            luckyCharm:        { icon: 'fa-clover',          maxLevel: 5,  cost: l => Math.pow(10, l), row: 2, col: 1, requires: ['goldenClick'] },
+            criticalImpulse:   { icon: 'fa-burst',           maxLevel: 10, cost: l => Math.pow(15, l), row: 2, col: 2, requires: ['goldenClick', 'efficientMachines'] },
+            offlineMastery:    { icon: 'fa-moon',            maxLevel: 10, cost: l => Math.pow(3, l),  row: 2, col: 3, requires: ['efficientMachines'] },
+            
+            // Row 3: Улучшения для Golden Clicker
+            goldenChance:      { icon: 'fa-dice-d20',        maxLevel: 10, cost: l => Math.pow(12, l), row: 3, col: 1, requires: ['luckyCharm']},
+            goldenTime:        { icon: 'fa-hourglass-start', maxLevel: 10, cost: l => Math.pow(8, l),  row: 3, col: 2, requires: ['criticalImpulse'] },
+            goldenFortune:     { icon: 'fa-coins',           maxLevel: 10, cost: l => Math.pow(25, l), row: 3, col: 3, requires: ['offlineMastery'] },
+
+            // Row 4: Мощные улучшения
+            beyondTime:          { icon: 'fa-stopwatch-20',   maxLevel: 5, cost: l => Math.pow(50, l),  row: 4, col: 2, requires: ['goldenTime'] },
+            globalPrestigeBoost: { icon: 'fa-star-of-life',   maxLevel: 5, cost: l => Math.pow(20, l),  row: 4, col: 3, requires: ['goldenFortune'] }
+        };
+        const ASCENSION_UPGRADES = {
+            fastStart: { icon: 'fa-running', maxLevel: 1, cost: 1, nameKey: 'au_fastStart_name', descKey: 'au_fastStart_desc' },
+            freeFoundation: { icon: 'fa-building', maxLevel: 5, cost: l => l + 1, nameKey: 'au_freeFoundation_name', descKey: 'au_freeFoundation_desc' },
+            prestigeMemory: { icon: 'fa-brain', maxLevel: 3, cost: l => 5 * (l + 1), nameKey: 'au_prestigeMemory_name', descKey: 'au_prestigeMemory_desc' }
+        };
+        const GLOBAL_EVENTS = {
+            sale: { nameKey: 'ge_sale_name', descKey: 'ge_sale_desc', icon: 'fa-tags', color: 'var(--success)', duration: 90, effect: { costMultiplier: 0.93 } },
+            boom: { nameKey: 'ge_boom_name', descKey: 'ge_boom_desc', icon: 'fa-industry', color: 'var(--warning)', duration: 90, effect: { cpsMultiplier: 1.15 } },
+            echo: { nameKey: 'ge_echo_name', descKey: 'ge_echo_desc', icon: 'fa-satellite-dish', color: 'var(--info)', duration: 90, effect: { cpcMultiplier: 1.50 } }
+        };
+        const ARTIFACTS = {
+            shard: { icon: 'fa-ghost', nameKey: 'art_shard_name', descKey: 'art_shard_desc', effect: { cps: 0.01 } },
+            cog: { icon: 'fa-cog', nameKey: 'art_cog_name', descKey: 'art_cog_desc', effect: { cpc: 0.01 } },
+            crystal: { icon: 'fa-gem', nameKey: 'art_crystal_name', descKey: 'art_crystal_desc', effect: { cooldown: 0.02 } }
+        };
+        const TITLES = {
+            newbie: { nameKey: 't_newbie', check: (s) => s.totalClicks >= 1e6 },
+            tycoon: { nameKey: 't_tycoon', check: (s) => s.totalClicks >= 1e9 },
+            prestigious: { nameKey: 't_prestigious', check: (s) => s.prestigeLevel >= 10 },
+            ascendant: { nameKey: 't_ascendant', check: (s) => s.ascensionLevel >= 1 },
+            boss_slayer: { nameKey: 't_boss_slayer', check: () => false },
+            beta: { nameKey: 't_beta', check: () => true }, // Now always available
+            administrator: { nameKey: 't_administrator', check: (s, uid) => ['QeeeVS6sjDNyOH8FJmMrXaafvz03'].includes(uid) }, // <-- !!! ВСТАВЬТЕ ВАШ FIREBASE UID СЮДА !!!
+        };
+        const CLAN_UPGRADES = {
+            cpsBonus: { icon: 'fa-layer-group', maxLevel: 20, cost: l => Math.ceil(1e7 * Math.pow(2.5, l)) },
+            cpcBonus: { icon: 'fa-mouse-pointer', maxLevel: 20, cost: l => Math.ceil(1e7 * Math.pow(2.5, l)) }
+        };
+        const QUESTS = { 
+            q1: { check: s => s.totalClicks >= 1000, reward: g => { g.state.clicks += 500; g.showNotification("notif_quest_complete", ["q1"]); } }, 
+            q2: { check: s => (s.upgrades.cps1 || 0) >= 10, reward: g => { g.state.cps += 5; g.showNotification("notif_quest_complete", ["q2"]); } }, 
+            q3: { check: s => s.totalClicks >= 1000000, reward: g => { g.state.prestigePoints += 1; g.showNotification("notif_quest_complete", ["q3"], 'prestige'); } },
+            q4: { check: s => s.stats.frenzyActivations >= 3, reward: g => { g.state.clicks += 10000; g.showNotification("notif_quest_complete", ["q4"]); } },
+            q5: { check: s => s.stats.critClicks >= 100, reward: g => { g.state.critChance += 0.005; g.showNotification("notif_quest_complete", ["q5"]); } },
+            q6: { check: s => s.totalClicks >= 10000000, reward: g => { g.state.prestigePoints += 2; g.showNotification("notif_quest_complete", ["q6"], 'prestige'); } },
+            q7: { check: s => (s.upgrades.cps5 || 0) >= 5, reward: g => { g.state.cps += 5000; g.showNotification("notif_quest_complete", ["q7"]); } },
+            q8: { check: s => s.prestigeLevel >= 3, reward: g => { g.state.prestigePoints += 5; g.showNotification("notif_quest_complete", ["q8"], 'prestige'); } },
+            q9: { check: s => s.stats.tttWins >= 1, reward: g => { g.state.clicks += 50000; g.showNotification("notif_quest_complete", ["q9"]); } },
+            q10: { check: s => s.stats.prestigePointsSpent >= 50, reward: g => { g.state.prestigePoints += 10; g.showNotification("notif_quest_complete", ["q10"], 'prestige'); } }
+        };
+        const ACHIEVEMENTS = { 
+            a1: { icon: 'fa-baby', check: s => s.stats.manualClicks >= 1000, bonus: 0.01 }, 
+            a2: { icon: 'fa-money-bill-wave', check: s => s.totalClicks >= 1000000, bonus: 0.02 }, 
+            a3: { icon: 'fa-boxes-stacked', check: s => s.stats.upgradesPurchased >= 100, bonus: 0.02 }, 
+            a4: { icon: 'fa-bolt', check: s => s.stats.critClicks >= 500, bonus: 0.02 }, 
+            a5: { icon: 'fa-star', check: s => s.prestigeLevel >= 1, bonus: 0.03 },
+            a6: { icon: 'fa-money-bill-transfer', check: s => s.totalClicks >= 10000000, bonus: 0.05 },
+            a7: { icon: 'fa-hand-pointer', check: s => s.stats.manualClicks >= 10000, bonus: 0.03 },
+            a8: { icon: 'fa-industry', check: s => Object.keys(s.upgrades).filter(id => id.startsWith('cps')).reduce((sum, id) => sum + (s.upgrades[id] || 0), 0) >= 500, bonus: 0.04 },
+            a9: { icon: 'fa-cube', check: s => (s.upgrades.cps6 || 0) >= 1, bonus: 0.05 },
+            a10: { icon: 'fa-gem', check: s => s.prestigeLevel >= 5, bonus: 0.08 },
+            a11: { icon: 'fa-users', check: s => s.stats.frenzyActivations >= 10, bonus: 0.03 },
+            a12: { icon: 'fa-clock', check: s => s.stats.timePlayed >= 24 * 3600, bonus: 0.1 }
+        };
+        const THEME_COLORS = { Purple: '#ba68c8', Blue: '#42a5f5', Teal: '#26a69a', Orange: '#ffa726', Red: '#ef5350' };
+        const CHANGELOG = [
+            { version: '4.6', changes: ['Overhauled Clan War boss fight UI with SVG boss asset and interactive elements.', 'Added default "The Beta" title for all new players with a new green color scheme.', 'Added exclusive "Administrator" title with a unique animated gradient.', 'Fixed "NaN" health bug in Clan Wars.', 'Fixed various display issues across leaderboards, clan lists, and chat to support new title colors.']},
+            { version: '4.5', changes: ['Implemented Clan Wars system with bosses.', 'Reworked avatar system to use direct URL input.','Added password visibility toggle.','Expanded detailed stats.']},
+            { version: '4.4', changes: ['Added Golden Clicker system.', 'Added new Prestige Upgrades.', 'Added detailed Offline Progress modal.'] },
+            { version: '4.3', changes: ['Added foundational Clan system.'] }
+        ];
+        
+        const getInitialGameState = (username) => ({ 
+            username, clicks: 0, totalClicks: 0, cpc: 1, cps: 0, prestigeLevel: 0, prestigePoints: 0, critChance: 0.02, critMultiplier: 10, clanId: null,
+            ascensionLevel: 0, ascensionShards: 0, ascensionUpgrades: {},
+            currentEvent: { id: null, endTime: 0 },
+            unlockedArtifacts: {}, 
+            unlockedTitles: { beta: true }, // Default title for new users
+            activeTitle: 'beta', // Active by default
+            avatarUrl: null,
+            upgrades: {}, prestigeUpgrades: {}, completedQuests: {}, achievements: {}, 
+            stats: { manualClicks: 0, critClicks: 0, upgradesPurchased: 0, timePlayed: 0, frenzyActivations: 0, prestiges: 0, tttWins: 0, prestigePointsSpent: 0, goldenClickersClicked: 0, clicksDonated: 0 }, 
+            lastLogin: Date.now(), lastDailyReward: 0, 
+            settings: { accentColor: '#ba68c8', simplifiedGraphics: false, language: 'en', font: 'Inter', stylePresets: [null, null, null] }, 
+            booster: { clickFrenzyEnd: 0, clickFrenzyCooldownEnd: 0, doubledCpsEnd: 0, doubledCpsCooldownEnd: 0, timeWarpCooldownEnd: 0 },
+            tempBonus: { cpsMultiplier: 1, cpsMultiplierEnd: 0 }
+        });
+
+        const TTT_PLAYER_X = 'X';
+        const TTT_PLAYER_O = 'O';
+        const FB_PIPE_SPEED = 2;
+        const FB_GRAVITY = 0.3;
+
+        let scriptHash = 0;
+        const calculateHash = async (text) => {
+            const buffer = new TextEncoder().encode(text);
+            const hashBuffer = await crypto.subtle.digest('SHA-1', buffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.reduce((acc, byte) => acc + byte, 0);
+        }
+
+        class ClickerGame {
+            constructor() {
+                this.state = {}; this.dom = {}; this.audio = {}; this.intervals = {}; this.user = null; this.currentLanguage = 'en'; this.isSoundEnabled = true; this.avatarCropper = null;
+                this.msBoard = []; this.msRows = 0; this.msCols = 0; this.msMines = 0; this.msRevealedCells = 0; this.msFlags = 0; this.msTimerInterval = null; this.msTimeElapsed = 0; this.msGameOver = false; this.msGameStarted = false;
+                this.tttBoard = []; this.tttCurrentPlayer = TTT_PLAYER_X; this.tttGameOver = false; this.tttCells = [];
+                this.fbPipes = []; this.fbBirdVelocity = 0; this.fbGameOver = true; this.fbScore = 0; this.fbLoopInterval = null; this.fbPipeSpawnInterval = null;
+                this.buyMultiplier = 1;
+                this.clanData = null;
+                this.clanWarData = null;
+                this.clanWarListener = null;
+                this.isInClanWarAttack = false;
+                this.clanWarAttackDamage = 0;
+                this.clanBonuses = { cps: 0, cpc: 0 };
+                this.chatListener = null;
+            }
+            
+            async init(user) {
+                this.user = user;
+                this.state = getInitialGameState(user.displayName || 'Player');
+                this.cacheDomElements();
+                this.initAudio();
+                await this.loadGame();
+                this.bindEvents();
+                this.setLanguage(this.state.settings.language || 'en', true);
+                this.applySettings();
+                this.checkDailyReward();
+                this.updateUI();
+                this.intervals.gameLoop = setInterval(() => this.gameLoop(), 1000);
+                this.intervals.save = setInterval(() => this.saveGame(), 15000);
+                this.intervals.ui = setInterval(() => this.updateUI(), 250);
+                this.intervals.eventChecker = setInterval(() => this.checkGlobalEvent(), 30000);
+            }
+
+            cacheDomElements() {
+                const ids = ['body-root', 'tooltip', 'clicks-display', 'cpc-display', 'cps-display', 'total-clicks-display', 'prestige-level-display', 'prestige-points-display', 'prestige-bonus-display', 'prestige-requirement-display', 'prestige-progress-bar', 'prestige-gain-display', 'shop-container', 'quest-list', 'main-click-btn', 'prestige-btn', 'logout-button', 'user-status-text', 'avatar-display', 'profile-avatar-large', 'avatar-url-input', 'avatar-url-btn', 'leaderboard-list', 'leaderboard-loading', 'lb-btn-clicks', 'lb-btn-prestige', 'settings', 'color-swatches-container', 'toggle-graphics-btn', 'graphics-status-text', 'booster-click-frenzy', 'booster-click-frenzy-timer', 'daily-reward-modal', 'claim-daily-reward-btn', 'achievements-grid', 'global-bonus-display', 'detailed-stats-container', 'changelog-container', 'development', 'other-games', 'minesweeper-game', 'minesweeper-board', 'minesweeper-reset', 'minesweeper-mines', 'minesweeper-timer', 'tictactoe-game', 'tic-tac-toe-board', 'tictactoe-status', 'tictactoe-reset', 'flappybird-game', 'flappy-bird-container', 'flappy-bird-bird', 'flappy-bird-score', 'flappy-bird-start', 'avatar-editor-modal', 'avatar-editor-image', 'avatar-editor-confirm', 'avatar-editor-cancel', 'clans', 'clan-dashboard-view', 'clan-join-create-view', 'clan-name-display', 'clan-member-count', 'clan-total-clicks', 'clan-member-list', 'clan-leave-btn', 'clan-name-input', 'clan-create-btn', 'font-selector', 'style-presets-container', 'offline-progress-modal', 'offline-time', 'offline-base', 'offline-bonus', 'offline-total', 'offline-continue-btn', 'clan-treasury-display', 'clan-donate-input', 'clan-donate-btn', 'clan-upgrades-container', 'run-debug-btn', 'debug-output', 'ascension-req-display', 'ascension-gain-display', 'ascend-btn', 'ascension-upgrades-section', 'ascension-shards-display', 'ascension-upgrades-container', 'global-event-banner', 'global-event-icon', 'global-event-title', 'global-event-desc', 'global-event-timer', 'profile-username', 'profile-title-display', 'title-selector', 'artifacts-grid', 'chat', 'chat-messages', 'chat-input', 'chat-send-btn', 'clan-war-container', 'clan-war-active-view', 'clan-war-boss-name', 'clan-war-boss-health', 'clan-war-health-bar', 'clan-war-timer', 'clan-war-attack-btn', 'clan-war-my-damage', 'clan-war-inactive-view', 'clan-war-start-btn', 'clan-war-cooldown-view', 'clan-war-global-cooldown-timer', 'clan-war-attack-overlay', 'clan-war-attack-timer', 'clan-war-attack-damage', 'clan-war-attack-cooldown', 'cw-boss-asset', 'cw-boss-container', 'cw-boss-health-bar', 'clan-war-attack-cpc'];
+                ids.forEach(id => {
+                    this.dom[id.replace(/-(\w)/g, (_, p1) => p1.toUpperCase())] = D(id);
+                });
+                this.dom.gameCards = document.querySelectorAll('.game-card');
+            }
+            
+            initAudio() {
+                const sounds = {
+                    click: "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg",
+                    upgrade: "https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg",
+                    error: "https://actions.google.com/sounds/v1/cartoon/metal_thunk_and_jump.ogg",
+                    success: "https://actions.google.com/sounds/v1/cartoon/woodpecker_tap.ogg"
+                };
+                Object.entries(sounds).forEach(([key, src]) => {
+                    this.audio[key] = new Audio(src);
+                    this.audio[key].volume = 0.3;
+                });
+            }
+
+            bindEvents() {
+                this.dom.mainClickBtn.onclick = () => this.click(); // Normal click logic remains here
+                this.dom.logoutButton.onclick = () => { if (confirm(this.getText('confirm_logout'))) signOut(auth); };
+                this.dom.boosterClickFrenzy.onclick = () => this.activateClickFrenzy();
+                D('booster-doubled-cps').onclick = () => this.activateDoubledCps();
+                D('booster-time-warp').onclick = () => this.activateTimeWarp();
+                this.dom.claimDailyRewardBtn.onclick = () => this.claimDailyReward();
+                this.dom.offlineContinueBtn.onclick = () => this.dom.offlineProgressModal.style.display = 'none';
+                this.dom.prestigeBtn.onclick = () => this.prestige();
+                this.dom.ascendBtn.onclick = () => this.ascend();
+                this.dom.ascensionUpgradesContainer.addEventListener('click', e => {
+                    const button = e.target.closest('button[data-id]');
+                    if (button) this.buyAscensionUpgrade(button.dataset.id);
+                });
+
+                this.dom.avatarUrlBtn.onclick = () => this.handleAvatarUrl();
+                this.dom.avatarUrlInput.onkeydown = (e) => { if (e.key === 'Enter') this.handleAvatarUrl() };
+                this.dom.avatarEditorConfirm.onclick = () => this.uploadCroppedAvatar();
+                this.dom.avatarEditorCancel.onclick = () => this.closeAvatarEditor();
+
+                this.dom.lbBtnClicks.onclick = () => this.loadLeaderboard('totalClicks');
+                this.dom.lbBtnPrestige.onclick = () => this.loadLeaderboard('prestigeLevel');
+                this.dom.clanCreateBtn.onclick = () => this.createClan();
+                this.dom.clanLeaveBtn.onclick = () => this.leaveClan();
+                this.dom.clanDonateBtn.onclick = () => this.donateToClan();
+                this.dom.chatSendBtn.onclick = () => this.sendChatMessage();
+                this.dom.chatInput.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); this.sendChatMessage(); }};
+                D('run-debug-btn').onclick = () => this.runLeaderboardDebugger();
+                this.dom.titleSelector.onchange = (e) => this.setActiveTitle(e.target.value);
+                
+                this.dom.clanWarStartBtn.onclick = () => this.startClanWar();
+                this.dom.clanWarAttackBtn.onclick = () => this.initiateClanWarAttack();
+                this.dom.cwBossAsset.onclick = () => this.clanWarAttackClick();
+
+                this.dom.clanUpgradesContainer.addEventListener('click', e => {
+                    const button = e.target.closest('button[data-id]');
+                    if (button) {
+                        this.buyClanUpgrade(button.dataset.id);
+                    }
+                });
+
+                this.dom.fontSelector.onchange = (e) => this.setFont(e.target.value);
+                this.dom.stylePresetsContainer.onclick = (e) => {
+                    const btn = e.target.closest('button');
+                    if (!btn) return;
+                    const loadIdx = btn.dataset.presetLoad;
+                    const saveIdx = btn.dataset.presetSave;
+                    if (loadIdx) this.loadPreset(parseInt(loadIdx, 10));
+                    else if (saveIdx) this.savePreset(parseInt(saveIdx, 10));
+                };
+                D('toggle-sound-btn').onclick = () => this.toggleSound();
+                D('toggle-graphics-btn').onclick = () => this.toggleGraphics();
+                D('lang-en-btn').onclick = () => this.setLanguage('en');
+                D('lang-ru-btn').onclick = () => this.setLanguage('ru');
+                window.addEventListener('beforeunload', () => this.saveGame());
+                document.querySelector('.tab-nav').onclick = e => {
+                    const btn = e.target.closest('.tab-btn');
+                    if (!btn) return;
+                    this.detachChatListener();
+                    this.detachClanWarListener();
+                    document.querySelector('.tab-nav .active')?.classList.remove('active');
+                    btn.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+                    const tab = D(btn.dataset.tab);
+                    if (tab) tab.style.display = ['profile', 'other-games', 'ascension'].includes(btn.dataset.tab) ? 'flex' : 'block';
+                    if (btn.dataset.tab === 'leaderboard') this.loadLeaderboard();
+                    if (btn.dataset.tab === 'clans') this.generateClanUI();
+                    if (btn.dataset.tab === 'profile') this.generateProfileUI();
+                    if (btn.dataset.tab === 'chat') this.attachChatListener();
+                    this.stopAllMiniGames();
+                };
+                document.body.addEventListener('mouseover', e => {
+                    const target = e.target.closest('[data-tooltip]');
+                    if (target) this.showTooltip(e, target.dataset.tooltip);
+                });
+                document.body.addEventListener('mouseout', e => {
+                    const target = e.target.closest('[data-tooltip]');
+                    if (target) this.hideTooltip();
+                });
+                document.body.addEventListener('mousemove', e => this.moveTooltip(e));
+                this.dom.gameCards.forEach(card => card.onclick = e => this.selectMiniGame(e.currentTarget.dataset.game));
+                this.dom.minesweeperReset.onclick = () => this.initMinesweeper();
+                this.dom.tictactoeReset.onclick = () => this.initTicTacToe();
+                this.dom.flappyBirdStart.onclick = () => this.startFlappyBird();
+
+                D('buy-multiplier-controls')?.addEventListener('click', (e) => {
+                    const button = e.target.closest('button');
+                    if (!button) return;
+                    this.buyMultiplier = button.dataset.multiplier === 'max' ? 'max' : parseInt(button.dataset.multiplier, 10);
+                    D('buy-multiplier-controls').querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    this.generateAllUI();
+                });
+                
+                document.addEventListener('keydown', (e) => this.handleHotkeys(e));
+            }
+            
+            handleHotkeys(e) {
+                if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
+                    return;
+                }
+
+                const upgradeKeys = ['cpc', 'cps1', 'cps2', 'cps3', 'cps4', 'cps5', 'cps6', 'cps7', 'cps8', 'cps9'];
+                
+                if (e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                    this.dom.mainClickBtn.style.transform = 'scale(0.98)';
+                    setTimeout(() => this.dom.mainClickBtn.style.transform = 'scale(1)', 100);
+                } else if (e.key >= '1' && e.key <= '9') {
+                    const index = parseInt(e.key, 10);
+                    if (upgradeKeys[index]) { // cps1 is at index 1
+                         this.buyUpgrade(upgradeKeys[index], 'normal');
+                    } else if (index === 1) { // 1 is for cpc (cursor)
+                        this.buyUpgrade(upgradeKeys[0], 'normal');
+                    }
+                }
+            }
+
+            async loadGame() {
+                try {
+                    const snapshot = await get(ref(db, `users/${this.user.uid}/gameState`));
+                    if (snapshot.exists()) {
+                        const data = snapshot.val();
+                        const initial = getInitialGameState(this.user.displayName || 'Player');
+                        this.state = { ...initial, ...data, stats: { ...initial.stats, ...(data.stats || {}) }, settings: { ...initial.settings, ...(data.settings || {}) }, booster: { ...initial.booster, ...(data.booster || {}) }, tempBonus: { ...initial.tempBonus, ...(data.tempBonus || {}) } };
+                        this.calculateOfflineProgress();
+                    }
+                    if (this.state.clanId) {
+                        await this.loadClanDetails();
+                    }
+                    const avatarSnap = await get(ref(db, `users/${this.user.uid}/userProfile/avatarUrl`));
+                    if (avatarSnap.exists()) {
+                         this.state.avatarUrl = avatarSnap.val();
+                         this.updateAvatar(this.state.avatarUrl);
+                    }
+                } catch (error) { console.error("Load game failed:", error); }
+            }
+
+            async saveGame() {
+                if (!this.user || this.isInClanWarAttack) return;
+                this.state.lastLogin = Date.now();
+                const totalClicksFloored = Math.floor(this.state.totalClicks);
+                const saveData = { ...this.state, clicks: Math.floor(this.state.clicks), totalClicks: totalClicksFloored };
+                const leaderboardData = { 
+                    username: this.state.username, 
+                    totalClicks: totalClicksFloored, 
+                    prestigeLevel: this.state.prestigeLevel, 
+                    titleKey: this.state.activeTitle // Save title key for accurate styling
+                };
+                try {
+                    await set(ref(db, `users/${this.user.uid}/gameState`), saveData);
+                    await set(ref(db, `leaderboard/${this.user.uid}`), leaderboardData);
+                } catch (error) {
+                    console.error("Save failed:", error);
+                    this.showNotification('notif_save_fail', [], 'error');
+                }
+            }
+
+            calculateOfflineProgress() {
+                const secondsOffline = Math.floor((Date.now() - (this.state.lastLogin || Date.now())) / 1000);
+                if (secondsOffline > 60) {
+                    const offlineUpgradeBonus = (this.state.prestigeUpgrades.offlineMastery || 0) * 0.05;
+                    const baseCps = this.getEffectiveCPS(true);
+                    const baseEarnings = secondsOffline * baseCps * 0.5;
+                    const bonusEarnings = secondsOffline * baseCps * offlineUpgradeBonus;
+                    const totalEarnings = baseEarnings + bonusEarnings;
+                    if (totalEarnings > 0) {
+                        this.state.clicks += totalEarnings; this.state.totalClicks += totalEarnings;
+                        this.dom.offlineTime.textContent = formatTime(secondsOffline);
+                        this.dom.offlineBase.textContent = `+${formatNumber(baseEarnings)}`;
+                        this.dom.offlineBonus.textContent = `+${formatNumber(bonusEarnings)}`;
+                        this.dom.offlineTotal.textContent = `+${formatNumber(totalEarnings)}`;
+                        this.dom.offlineProgressModal.style.display = 'flex';
+                    }
+                }
+            }
+            
+            async gameLoop() {
+                if (this.isInClanWarAttack) return;
+                const now = Date.now();
+                if(this.state.tempBonus.cpsMultiplierEnd && now > this.state.tempBonus.cpsMultiplierEnd) {
+                    this.state.tempBonus.cpsMultiplier = 1; this.state.tempBonus.cpsMultiplierEnd = 0;
+                }
+                if (this.state.currentEvent.id && now > this.state.currentEvent.endTime) {
+                    this.state.currentEvent = { id: null, endTime: 0 };
+                }
+                const currentHash = await calculateHash(D('game-script').textContent);
+                if (scriptHash && scriptHash !== currentHash) { this.haltGame(); return; }
+                this.state.stats.timePlayed++;
+                const gain = this.getEffectiveCPS();
+                if (gain > 0) {
+                    this.state.clicks += gain; this.state.totalClicks += gain;
+                }
+                this.checkQuests(); this.checkAchievements(); this.checkTitles(); this.trySpawnGoldenClicker();
+            }
+
+            click() {
+                this.state.stats.manualClicks++;
+                let gain = this.getEffectiveCPC();
+                const frenzyMultiplier = Date.now() < this.state.booster.clickFrenzyEnd ? 5 : 1;
+                gain *= frenzyMultiplier;
+                const critChanceBonus = (this.state.prestigeUpgrades.luckyCharm || 0) * 0.01;
+                const critMultiplierBonus = (this.state.prestigeUpgrades.criticalImpulse || 0) * 0.10;
+                const finalCritMultiplier = this.state.critMultiplier * (1 + critMultiplierBonus);
+                const isCrit = Math.random() < (this.state.critChance + critChanceBonus);
+                if (isCrit) {
+                    this.state.stats.critClicks++; gain *= finalCritMultiplier; this.playSound('crit');
+                } else { this.playSound('click'); }
+                this.state.clicks += gain; this.state.totalClicks += gain; this.showFloatingText(gain, isCrit);
+            }
+
+            calculateArtifactBonuses() {
+                const bonuses = { cps: 1, cpc: 1, cooldown: 1 };
+                Object.keys(this.state.unlockedArtifacts).forEach(artId => {
+                    const artifact = ARTIFACTS[artId];
+                    if (artifact.effect.cps) bonuses.cps += artifact.effect.cps;
+                    if (artifact.effect.cpc) bonuses.cpc += artifact.effect.cpc;
+                    if (artifact.effect.cooldown) bonuses.cooldown -= artifact.effect.cooldown;
+                });
+                return bonuses;
+            }
+
+            getGlobalBonus() {
+                return 1 + Object.entries(this.state.achievements || {}).reduce((sum, [key, unlocked]) => {
+                    return sum + (unlocked ? (ACHIEVEMENTS[key]?.bonus || 0) : 0);
+                }, 0);
+            }
+
+            getPrestigeBaseBonus() {
+                return 1 + this.state.prestigeLevel * 0.1 + (this.state.prestigeUpgrades.globalPrestigeBoost || 0) * 0.02;
+            }
+
+            getEffectiveCPC() {
+                const artifactBonuses = this.calculateArtifactBonuses();
+                const goldenClickBonus = (this.state.prestigeUpgrades.goldenClick || 0) * 0.25;
+                let baseCpc = this.state.cpc * (1 + goldenClickBonus) * this.getPrestigeBaseBonus() * this.getGlobalBonus();
+                baseCpc *= (1 + this.clanBonuses.cpc);
+                baseCpc *= artifactBonuses.cpc;
+                if (this.state.currentEvent.id === 'echo') { baseCpc *= GLOBAL_EVENTS.echo.effect.cpcMultiplier; }
+                return baseCpc;
+            }
+
+            getEffectiveCPS(ignoreTemp = false) {
+                const artifactBonuses = this.calculateArtifactBonuses();
+                const efficientMachinesBonus = (this.state.prestigeUpgrades.efficientMachines || 0) * 0.10;
+                let finalCps = this.state.cps * (1 + efficientMachinesBonus) * this.getPrestigeBaseBonus() * this.getGlobalBonus() * (1 + this.clanBonuses.cps);
+                finalCps *= artifactBonuses.cps;
+                if (this.state.currentEvent.id === 'boom') { finalCps *= GLOBAL_EVENTS.boom.effect.cpsMultiplier; }
+                if (!ignoreTemp && Date.now() < this.state.booster.doubledCpsEnd) { finalCps *= 2; }
+                if (!ignoreTemp && this.state.tempBonus.cpsMultiplier > 1) { finalCps *= this.state.tempBonus.cpsMultiplier; }
+                return finalCps;
+            }
+
+            generateAllUI() {
+                this.dom.shopContainer.innerHTML = Object.entries(UPGRADES).map(([id, conf]) => this.createButtonHTML(id, conf, 'normal')).join('');
+                this.generatePrestigeTreeUI();
+                this.dom.questList.innerHTML = Object.entries(QUESTS).map(([id]) => this.createQuestHTML(id)).join('');
+                this.dom.colorSwatchesContainer.innerHTML = Object.entries(THEME_COLORS).map(([name, color]) => `<div class="color-swatch" data-color="${color}" data-tooltip="${name}" style="background-color: ${color};"></div>`).join('');
+                this.dom.achievementsGrid.innerHTML = Object.entries(ACHIEVEMENTS).map(([id, conf]) => this.createAchievementHTML(id, conf)).join('');
+                this.dom.changelogContainer.innerHTML = CHANGELOG.map(c => `<div><p class="changelog-version">v${c.version}</p><ul class="changelog-list">${c.changes.map(ch => `<li>${ch}</li>`).join('')}</ul></div>`).join('<hr class="border-gray-700 my-3">');
+                this.generateClanUI();
+                this.generateAscensionUpgradesUI();
+                this.addEventListenersToUI();
+            }
+            
+            generateFontUI() {
+                if (this.dom.fontSelector) this.dom.fontSelector.innerHTML = Object.keys(FONTS).map(name => `<option value="${name}">${name}</option>`).join('');
+                if (this.dom.stylePresetsContainer) {
+                    this.dom.stylePresetsContainer.innerHTML = [0, 1, 2].map(i => `
+                        <div class="stat-box p-3">
+                            <div id="preset-preview-${i}" class="mb-2" style="height: 20px; border-radius: 4px; background: #2a2a2a; transition: background-color 0.3s;"></div>
+                            <div class="flex gap-2 justify-center">
+                                <button class="btn flex-1 justify-center p-2 text-xs" style="margin-bottom:0;" data-preset-load="${i+1}">${this.getText('preset_load')}</button>
+                                <button class="btn flex-1 justify-center p-2 text-xs" style="margin-bottom:0;" data-preset-save="${i+1}">${this.getText('preset_save')}</button>
+                            </div>
+                        </div>`).join('');
+                }
+            }
+            
+            generateProfileUI() {
+                const usernameEl = this.dom.profileUsername;
+                usernameEl.textContent = this.state.username;
+                usernameEl.className = 'text-2xl font-bold'; // Reset classes
+                const activeTitleKey = this.state.activeTitle;
+                if(activeTitleKey) {
+                     const titleClassName = `${activeTitleKey}-title`;
+                     usernameEl.classList.add(titleClassName);
+                }
+
+                const titleTextKey = activeTitleKey ? TITLES[activeTitleKey].nameKey : 't_none';
+                this.dom.profileTitleDisplay.textContent = this.getText(titleTextKey);
+                
+                this.dom.artifactsGrid.innerHTML = Object.entries(ARTIFACTS).map(([id, conf]) => {
+                    const unlocked = this.state.unlockedArtifacts[id]; const name = this.getText(conf.nameKey); const desc = this.getText(conf.descKey);
+                    return `<div class="artifact ${unlocked ? 'unlocked' : ''}" data-tooltip="${name}: ${desc}"><i class="fas ${conf.icon}"></i></div>`;
+                }).join('');
+                let titleOptions = `<option value="">${this.getText('t_none')}</option>`;
+                Object.entries(TITLES).forEach(([id, conf]) => {
+                    if (this.state.unlockedTitles[id] || conf.check(this.state, this.user.uid)) {
+                        if (!this.state.unlockedTitles[id]) this.state.unlockedTitles[id] = true;
+                        const name = this.getText(conf.nameKey);
+                        titleOptions += `<option value="${id}" ${this.state.activeTitle === id ? 'selected' : ''}>${name}</option>`;
+                    }
+                });
+                this.dom.titleSelector.innerHTML = titleOptions;
+            }
+
+            addEventListenersToUI() {
+                D('shop-container')?.querySelectorAll('.btn').forEach(b => b.onclick = () => this.buyUpgrade(b.dataset.id, 'normal'));
+                D('color-swatches-container')?.querySelectorAll('.color-swatch').forEach(s => s.onclick = () => this.setTheme(s.dataset.color));
+            }
+
+            calculateMaxBuyable(baseCost, multiplier, currentLevel, currentClicks) {
+                const freeLevels = (this.state.ascensionUpgrades.freeFoundation || 0) * 10;
+                
+                if (currentLevel < freeLevels) {
+                    return 0;
+                }
+
+                let effectiveClicks = currentClicks;
+                if (this.state.currentEvent.id === 'sale') {
+                    effectiveClicks /= GLOBAL_EVENTS.sale.effect.costMultiplier;
+                }
+
+                const costOfFirst = baseCost * Math.pow(multiplier, currentLevel);
+                
+                if (effectiveClicks < costOfFirst) {
+                    return 0;
+                }
+                
+                const amount = Math.floor(
+                    Math.log( (effectiveClicks * (multiplier - 1) / costOfFirst) + 1 ) / Math.log(multiplier)
+                );
+
+                return Math.max(1, amount);
+            }
+            
+            calculateBulkCost(baseCost, multiplier, currentLevel, amount) {
+                const freeLevels = (this.state.ascensionUpgrades.freeFoundation || 0) * 10;
+                let cost;
+                if (currentLevel < freeLevels) {
+                    if (currentLevel + amount <= freeLevels) return 0;
+                    const newAmount = amount - (freeLevels - currentLevel); const newCurrentLevel = freeLevels;
+                    cost = Math.ceil(baseCost * Math.pow(multiplier, newCurrentLevel) * ( (Math.pow(multiplier, newAmount) - 1) / (multiplier - 1) ));
+                } else {
+                    cost = Math.ceil(baseCost * Math.pow(multiplier, currentLevel) * ( (Math.pow(multiplier, amount) - 1) / (multiplier - 1) ));
+                }
+                if (this.state.currentEvent.id === 'sale') { cost *= GLOBAL_EVENTS.sale.effect.costMultiplier; }
+                return Math.ceil(cost);
+            }
+
+            buyUpgrade(id, type) {
+                if (type === 'prestige') {
+                    const config = PRESTIGE_UPGRADES[id];
+                    const level = this.state.prestigeUpgrades[id] || 0;
+                    
+                    const hasRequirements = config.requires.every(reqId => (this.state.prestigeUpgrades[reqId] || 0) > 0);
+                    if (!hasRequirements) {
+                        return;
+                    }
+                    
+                    if (config.maxLevel && level >= config.maxLevel) return;
+                    const cost = config.cost(level + 1);
+
+                    if (this.state.prestigePoints >= cost) {
+                        this.state.stats.upgradesPurchased++; 
+                        this.state.stats.prestigePointsSpent += cost;
+                        this.state.prestigePoints -= cost; 
+                        this.state.prestigeUpgrades[id] = level + 1;
+
+                        if (config.action) config.action(this.state);
+                        this.playSound('upgrade'); 
+                        this.generatePrestigeTreeUI();
+                    }
+                    return;
+                }
+                
+                const config = UPGRADES[id];
+                const level = this.state.upgrades[id] || 0;
+                let amount;
+                let cost;
+
+                if (this.buyMultiplier === 'max') {
+                    amount = this.calculateMaxBuyable(config.baseCost, config.costMultiplier, level, this.state.clicks);
+                    if (amount === 0) return;
+                    cost = this.calculateBulkCost(config.baseCost, config.costMultiplier, level, amount);
+                } else {
+                    amount = this.buyMultiplier;
+                    cost = this.calculateBulkCost(config.baseCost, config.costMultiplier, level, amount);
+                }
+                
+                if (this.state.clicks >= cost) {
+                    this.state.stats.upgradesPurchased += amount; this.state.clicks -= cost;
+                    this.state.upgrades[id] = level + amount;
+                    for (let i = 0; i < amount; i++) { 
+                        if (config.action) config.action(this.state); 
+                    }
+                    this.playSound('upgrade'); 
+                    this.generateAllUI();
+                }
+            }
+            
+            createButtonHTML(id, conf, type) {
+                if (type === 'prestige') {
+                    // This is now handled by generatePrestigeTreeUI
+                    return '';
+                }
+                const level = this.state.upgrades[id] || 0;
+                let amount, cost, buyText;
+
+                if (this.buyMultiplier === 'max') {
+                    amount = this.calculateMaxBuyable(conf.baseCost, conf.costMultiplier, level, this.state.clicks);
+                    cost = (amount > 0) ? this.calculateBulkCost(conf.baseCost, conf.costMultiplier, level, amount) : 0;
+                    buyText = `Buy Max (${amount})`;
+                } else {
+                    amount = this.buyMultiplier;
+                    cost = this.calculateBulkCost(conf.baseCost, conf.costMultiplier, level, amount);
+                    buyText = `Buy ${amount}`;
+                }
+
+                const canAfford = this.state.clicks >= cost && amount > 0;
+                const name = this.getText(`u_names.${id}`); 
+                let desc = this.getText(`u_descs.${id}`);
+                
+                return `<button class="btn" data-id="${id}" ${!canAfford ? 'disabled' : ''}><span class="item-info"><i class="fas ${conf.icon}"></i><span class="title">${name} <span class="level">[${level}]</span></span></span><div class="text-right"><span class="item-cost">${formatNumber(cost)}</span><div class="small text-muted">${buyText}</div></div><i class="fas fa-info-circle btn-info-icon" data-tooltip="${desc}"></i></button>`;
+            }
+
+            createQuestHTML(id) {
+                const isCompleted = this.state.completedQuests[id];
+                const name = this.getText(`q_names.${id}`); let desc = this.getText(`q_descs.${id}`);
+                return `<div id="quest-${id}" class="quest-item ${isCompleted ? 'completed' : ''}" data-tooltip="${desc}"><p><strong>${name}</strong></p><p class="small">${isCompleted ? this.getText("quest_status_completed") : this.getText("quest_status_inprogress")}</p></div>`;
+            }
+
+            createAchievementHTML(id, conf) {
+                const isUnlocked = this.state.achievements[id];
+                const name = this.getText(`a_names.${id}`); let desc = this.getText(`a_descs.${id}`);
+                return `<div class="achievement ${isUnlocked ? 'unlocked' : ''}" data-tooltip="${desc} (+${(conf.bonus * 100).toFixed(0)}% bonus)"><i class="fas ${conf.icon}"></i><p>${isUnlocked ? name : '???'}</p></div>`;
+            }
+
+            generatePrestigeTreeUI() {
+                const treeContainer = D('prestige-skill-tree');
+                const svgLines = D('prestige-tree-lines');
+                if (!treeContainer || !svgLines) return;
+
+                treeContainer.innerHTML = '';
+                svgLines.innerHTML = '';
+
+                Object.entries(PRESTIGE_UPGRADES).forEach(([id, conf]) => {
+                    const level = this.state.prestigeUpgrades[id] || 0;
+                    const isMax = conf.maxLevel && level >= conf.maxLevel;
+                    const cost = isMax ? 0 : conf.cost(level + 1);
+
+                    const hasRequirements = conf.requires.every(reqId => (this.state.prestigeUpgrades[reqId] || 0) > 0);
+                    let status = 'locked';
+                    if (level > 0) status = 'purchased';
+                    else if (hasRequirements) status = 'available';
+
+                    const node = document.createElement('div');
+                    node.id = `skill-${id}`;
+                    node.className = `skill-node ${status}`;
+                    node.dataset.id = id;
+                    node.style.gridRow = conf.row;
+                    node.style.gridColumn = conf.col;
+                    
+                    const name = this.getText(`u_names.${id}`);
+                    const desc = this.getText(`u_descs.${id}`);
+                    node.dataset.tooltip = `${name}: ${desc}`;
+
+                    node.innerHTML = `
+                        <i class="fas ${conf.icon}"></i>
+                        <div class="skill-level">${level} / ${conf.maxLevel}</div>
+                        <div class="skill-cost ${isMax ? 'max' : ''}">
+                            ${isMax ? this.getText("max_level") : `<i class="fas fa-star"></i> ${cost}`}
+                        </div>
+                    `;
+                    
+                    if(status !== 'locked' && !isMax) {
+                       node.onclick = () => this.buyUpgrade(id, 'prestige');
+                    }
+
+                    treeContainer.appendChild(node);
+                });
+                
+                this.renderPrestigeTreeLines();
+            }
+
+            renderPrestigeTreeLines() {
+                const svgLines = D('prestige-tree-lines');
+                const treeContainer = D('prestige-skill-tree');
+                if (!svgLines || !treeContainer) return;
+                svgLines.innerHTML = '';
+
+                setTimeout(() => { // Timeout to ensure DOM is fully rendered
+                    Object.entries(PRESTIGE_UPGRADES).forEach(([id, conf]) => {
+                        if (conf.requires.length > 0) {
+                            const childNode = D(`skill-${id}`);
+                            
+                            conf.requires.forEach(reqId => {
+                                const parentNode = D(`skill-${reqId}`);
+                                if (!parentNode || !childNode) return;
+
+                                const parentRect = parentNode.getBoundingClientRect();
+                                const childRect = childNode.getBoundingClientRect();
+                                const containerRect = treeContainer.getBoundingClientRect();
+                                
+                                const startX = parentRect.left - containerRect.left + parentRect.width / 2;
+                                const startY = parentRect.top - containerRect.top + parentRect.height;
+                                const endX = childRect.left - containerRect.left + childRect.width / 2;
+                                const endY = childRect.top - containerRect.top;
+
+                                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                                line.setAttribute('x1', startX);
+                                line.setAttribute('y1', startY);
+                                line.setAttribute('x2', endX);
+                                line.setAttribute('y2', endY);
+                                
+                                const isParentPurchased = (this.state.prestigeUpgrades[reqId] || 0) > 0;
+                                line.setAttribute('stroke', isParentPurchased ? 'var(--prestige)' : '#555');
+                                line.setAttribute('stroke-width', '2');
+                                svgLines.appendChild(line);
+                            });
+                        }
+                    });
+                }, 100);
+            }
+
+            checkQuests() {
+                let hasUnclaimed = false;
+                Object.entries(QUESTS).forEach(([id, conf]) => {
+                    if (!this.state.completedQuests[id] && conf.check(this.state)) {
+                        this.state.completedQuests[id] = true; conf.reward(this);
+                        this.dom.questList.innerHTML = Object.keys(QUESTS).map(qid => this.createQuestHTML(qid)).join('');
+                        this.saveGame();
+                    }
+                    if (!this.state.completedQuests[id] && conf.check(this.state)) hasUnclaimed = true;
+                });
+                document.querySelector('.tab-btn[data-tab="quests"]')?.classList.toggle('quest-complete', hasUnclaimed);
+            }
+
+            checkAchievements() {
+                Object.entries(ACHIEVEMENTS).forEach(([id, conf]) => {
+                    if (!this.state.achievements[id] && conf.check(this.state)) {
+                        this.state.achievements[id] = true;
+                        this.showNotification("notif_achievement_unlocked", [this.getText(`a_names.${id}`)], 'prestige');
+                        this.dom.achievementsGrid.innerHTML = Object.entries(ACHIEVEMENTS).map(([i, c]) => this.createAchievementHTML(i, c)).join('');
+                        this.saveGame();
+                    }
+                });
+            }
+
+            checkTitles() {
+                Object.entries(TITLES).forEach(([id, conf]) => {
+                    if (!this.state.unlockedTitles[id] && conf.check(this.state, this.user.uid)) {
+                        this.state.unlockedTitles[id] = true;
+                    }
+                });
+            }
+
+            setActiveTitle(titleId) {
+                this.state.activeTitle = titleId === "" ? null : titleId;
+                this.generateProfileUI();
+                this.saveGame();
+            }
+
+            prestige() {
+                const req = 1e6 * Math.pow(1.5, this.state.prestigeLevel);
+                if (this.state.clicks < req) return;
+                const pointsGained = Math.floor(Math.sqrt(this.state.clicks / 1e6));
+                if (confirm(this.getText("confirm_prestige", [pointsGained]))) {
+                    let preservedPrestigeUpgrades = {};
+                    const upgradesToPreserveCount = this.state.ascensionUpgrades.prestigeMemory || 0;
+                    if (upgradesToPreserveCount > 0) {
+                        const availableUpgrades = Object.keys(this.state.prestigeUpgrades).filter(id => this.state.prestigeUpgrades[id] > 0);
+                        for (let i = availableUpgrades.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [availableUpgrades[i], availableUpgrades[j]] = [availableUpgrades[j], availableUpgrades[i]]; }
+                        const upgradesToPreserve = availableUpgrades.slice(0, upgradesToPreserveCount);
+                        upgradesToPreserve.forEach(id => { preservedPrestigeUpgrades[id] = this.state.prestigeUpgrades[id]; });
+                    }
+                    this.state.prestigeLevel++; this.state.prestigePoints += pointsGained;
+                    if (this.state.ascensionUpgrades.fastStart) { this.state.prestigePoints += 5; }
+                    this.state.stats.prestiges++;
+                    this.state.clicks = 0; this.state.cpc = 1; this.state.cps = 0; this.state.upgrades = {}; this.state.prestigeUpgrades = preservedPrestigeUpgrades;
+                    this.playSound('success'); this.showNotification("notif_prestige", [this.state.prestigeLevel, pointsGained], 'prestige');
+                    this.saveGame(); this.generateAllUI();
+                }
+            }
+
+            ascend() {
+                const requiredPrestige = 100 + (this.state.ascensionLevel * 25);
+                if (this.state.prestigeLevel < requiredPrestige) return;
+                const shardsGained = 1 + Math.floor(this.state.ascensionLevel / 5);
+                if (confirm(`Вы уверены, что хотите Вознестись? Весь ваш прогресс, включая Престиж и его улучшения, будет сброшен. Вы получите ${shardsGained} Осколков Сингулярности.`)) {
+                    const preservedStats = { timePlayed: this.state.stats.timePlayed };
+                    const preservedSettings = this.state.settings; const preservedClan = this.state.clanId;
+                    const cleanState = getInitialGameState(this.state.username);
+                    this.state = {
+                        ...cleanState, stats: { ...cleanState.stats, ...preservedStats }, settings: preservedSettings, clanId: preservedClan,
+                        ascensionLevel: this.state.ascensionLevel + 1, ascensionShards: this.state.ascensionShards + shardsGained,
+                        ascensionUpgrades: this.state.ascensionUpgrades, unlockedArtifacts: this.state.unlockedArtifacts,
+                        unlockedTitles: this.state.unlockedTitles, activeTitle: this.state.activeTitle, lastLogin: Date.now()
+                    };
+                    this.showNotification("notif_ascend", [this.state.ascensionLevel, shardsGained], 'info');
+                    this.saveGame(); this.generateAllUI();
+                }
+            }
+            
+            buyAscensionUpgrade(id) {
+                const config = ASCENSION_UPGRADES[id];
+                const level = this.state.ascensionUpgrades[id] || 0;
+                if (config.maxLevel && level >= config.maxLevel) return;
+                const cost = typeof config.cost === 'function' ? config.cost(level) : config.cost;
+                if (this.state.ascensionShards >= cost) {
+                    this.state.ascensionShards -= cost; this.state.ascensionUpgrades[id] = level + 1;
+                    this.playSound('upgrade'); this.generateAscensionUpgradesUI(); this.saveGame();
+                }
+            }
+
+            generateAscensionUpgradesUI() {
+                if (this.state.ascensionLevel > 0) {
+                    this.dom.ascensionUpgradesSection.style.display = 'block';
+                    this.dom.ascensionShardsDisplay.textContent = this.state.ascensionShards;
+                    this.dom.ascensionUpgradesContainer.innerHTML = Object.entries(ASCENSION_UPGRADES).map(([id, conf]) => {
+                        const level = this.state.ascensionUpgrades[id] || 0;
+                        const isMax = conf.maxLevel && level >= conf.maxLevel;
+                        const cost = isMax ? 0 : (typeof conf.cost === 'function' ? conf.cost(level) : conf.cost);
+                        const canAfford = this.state.ascensionShards >= cost; const name = this.getText(conf.nameKey); const desc = this.getText(conf.descKey);
+                        const costHTML = isMax ? `<span class="prestige-cost">${this.getText("max_level")}</span>` : `<span class="prestige-cost" style="color:var(--info)"><i class="fas fa-atom"></i> ${cost}</span>`;
+                        return `<button class="btn" data-id="${id}" ${isMax || !canAfford ? 'disabled' : ''}><span class="item-info"><i class="fas ${conf.icon}"></i><span class="title">${name} <span class="level">[${level}/${conf.maxLevel}]</span></span></span>${costHTML}<i class="fas fa-info-circle btn-info-icon" data-tooltip="${desc}"></i></button>`;
+                    }).join('');
+                } else { this.dom.ascensionUpgradesSection.style.display = 'none'; }
+            }
+
+            checkGlobalEvent() {
+                if (!this.state.currentEvent.id && Math.random() < 0.1) {
+                    const eventKeys = Object.keys(GLOBAL_EVENTS);
+                    const randomEventId = eventKeys[Math.floor(Math.random() * eventKeys.length)];
+                    this.startGlobalEvent(randomEventId);
+                }
+            }
+
+            startGlobalEvent(eventId) {
+                const eventConfig = GLOBAL_EVENTS[eventId];
+                this.state.currentEvent.id = eventId; this.state.currentEvent.endTime = Date.now() + eventConfig.duration * 1000;
+                this.showNotification('notif_event_start', [this.getText(eventConfig.nameKey)]);
+                this.generateAllUI();
+            }
+
+            async loadLeaderboard(orderBy = 'totalClicks') {
+                try {
+                    this.dom.leaderboardLoading.style.display = 'block'; this.dom.leaderboardList.innerHTML = '';
+                    this.dom.lbBtnClicks.classList.toggle('active', orderBy === 'totalClicks');
+                    this.dom.lbBtnPrestige.classList.toggle('active', orderBy === 'prestigeLevel');
+                    const q = query(ref(db, 'leaderboard'), orderByChild(orderBy), limitToLast(10));
+                    const snap = await get(q);
+                    if (snap.exists()) {
+                        const players = []; snap.forEach(c => players.push({ ...c.val(), id: c.key }));
+                        players.reverse().forEach((p, i) => {
+                            const li = document.createElement('li');
+                            li.className = 'flex justify-between items-center p-2 bg-black bg-opacity-20 rounded-lg mb-2';
+                            const value = orderBy === 'totalClicks' ? formatNumber(p.totalClicks) : p.prestigeLevel;
+                            const titleClassName = p.titleKey ? `${p.titleKey}-title` : '';
+                            const usernameHTML = `<span class="${titleClassName}">${p.username || 'Player'}</span>`;
+                            li.innerHTML = `<div>${i + 1}. ${usernameHTML}</div><span class="font-bold text-accent">${value}</span>`;
+                            this.dom.leaderboardList.appendChild(li);
+                        });
+                    } else { this.dom.leaderboardList.innerHTML = `<li class="text-center">${this.getText("leaderboard_empty")}</li>`; }
+                } catch (e) { this.showNotification('notif_leaderboard_fail', [], 'error'); console.error("Leaderboard loading error:", e); } finally { this.dom.leaderboardLoading.style.display = 'none'; }
+            }
+
+            async runLeaderboardDebugger() {
+                const output = D('debug-output'); output.innerHTML = 'Running diagnostics...\n\n'; let step = 1;
+                const log = (message, isSuccess) => { const icon = isSuccess ? '✅' : '❌'; output.innerHTML += `${step}. ${message} ... ${icon}\n`; step++; };
+                try {
+                    const snap = await get(ref(db, ".info/connected"));
+                    if (snap.val() === true) { log('Connected to Firebase', true); } else { log('Connection to Firebase failed', false); return; }
+                } catch(e) { log('Connection to Firebase threw an error', false); return; }
+                const currentUser = auth.currentUser;
+                if (currentUser) { log(`User authenticated (UID: ${currentUser.uid})`, true); } else { log('User not authenticated', false); return; }
+                try { await get(ref(db, 'leaderboard')); log('Firebase rules allow reading /leaderboard', true); } catch (e) { if (e.code === 'permission-denied') { log('Firebase rules DENY reading /leaderboard', false); } else { log(`Unexpected error: ${e.code}`, false); } return; }
+                try { await get(query(ref(db, 'leaderboard'), orderByChild('totalClicks'))); log('Query with orderByChild("totalClicks") works', true); } catch (e) { log(`Query failed: ${e.message}`, false); }
+                output.innerHTML += '\n\nDiagnostics complete.';
+            }
+
+            updateUI() {
+                if (this.isInClanWarAttack) return;
+                this.dom.clicksDisplay.textContent = formatNumber(this.state.clicks);
+                this.dom.totalClicksDisplay.textContent = formatNumber(this.state.totalClicks);
+                this.dom.cpcDisplay.textContent = formatNumber(this.getEffectiveCPC());
+                this.dom.cpsDisplay.textContent = formatNumber(this.getEffectiveCPS());
+                const usernameEl = this.dom.userStatusText;
+                usernameEl.textContent = `Hi, `;
+                const usernameSpan = document.createElement('span');
+                usernameSpan.textContent = this.state.username;
+                if(this.state.activeTitle) usernameSpan.classList.add(`${this.state.activeTitle}-title`);
+                usernameEl.appendChild(usernameSpan);
+                usernameEl.append('!');
+
+                this.dom.prestigeLevelDisplay.textContent = this.state.prestigeLevel;
+                this.dom.prestigePointsDisplay.textContent = this.state.prestigePoints;
+                this.dom.prestigeBonusDisplay.textContent = `${this.getPrestigeBaseBonus().toFixed(2)}x`;
+                this.dom.globalBonusDisplay.textContent = `${this.getGlobalBonus().toFixed(2)}x`;
+                const req = 1e6 * Math.pow(1.5, this.state.prestigeLevel);
+                this.dom.prestigeRequirementDisplay.textContent = formatNumber(req);
+                this.dom.prestigeProgressBar.style.width = `${Math.min(this.state.clicks / req * 100, 100)}%`;
+                this.dom.prestigeGainDisplay.textContent = `+${Math.floor(Math.sqrt(this.state.clicks / 1e6))}`;
+                this.dom.prestigeBtn.disabled = this.state.clicks < req;
+                const requiredPrestige = 100 + (this.state.ascensionLevel * 25);
+                this.dom.ascensionReqDisplay.textContent = `${this.state.prestigeLevel} / ${requiredPrestige}`;
+                this.dom.ascendBtn.disabled = this.state.prestigeLevel < requiredPrestige;
+                this.dom.ascensionGainDisplay.textContent = `+${1 + Math.floor(this.state.ascensionLevel / 5)}`;
+                if (this.state.ascensionLevel > 0) {
+                    this.dom.ascensionUpgradesSection.style.display = 'block';
+                    this.dom.ascensionShardsDisplay.textContent = this.state.ascensionShards;
+                }
+                const { currentEvent } = this.state;
+                if (currentEvent.id) {
+                    const eventConfig = GLOBAL_EVENTS[currentEvent.id];
+                    const remainingSeconds = Math.max(0, Math.ceil((currentEvent.endTime - Date.now()) / 1000));
+                    this.dom.globalEventBanner.style.display = 'flex';
+                    this.dom.globalEventIcon.className = `icon fas ${eventConfig.icon}`; this.dom.globalEventIcon.style.color = eventConfig.color;
+                    this.dom.globalEventTitle.textContent = this.getText(eventConfig.nameKey);
+                    this.dom.globalEventDesc.textContent = this.getText(eventConfig.descKey);
+                    this.dom.globalEventTimer.textContent = `${Math.floor(remainingSeconds / 60)}:${(remainingSeconds % 60).toString().padStart(2, '0')}`;
+                } else { this.dom.globalEventBanner.style.display = 'none'; }
+                
+                const now = Date.now();
+                const artifactBonuses = this.calculateArtifactBonuses();
+                const cooldownReduction = (this.state.prestigeUpgrades.beyondTime || 0) * 0.05 * artifactBonuses.cooldown;
+                if (now < this.state.booster.clickFrenzyEnd) { this.dom.boosterClickFrenzyTimer.textContent = `${this.getText("booster_active")} ${Math.ceil((this.state.booster.clickFrenzyEnd - now) / 1000)}s`; D('booster-click-frenzy').disabled = true; } 
+                else if (now < this.state.booster.clickFrenzyCooldownEnd) { D('booster-click-frenzy').disabled = true; this.dom.boosterClickFrenzyTimer.textContent = `${this.getText("booster_cooldown")} ${Math.ceil((this.state.booster.clickFrenzyCooldownEnd - now) / 1000)}s`; } 
+                else { D('booster-click-frenzy').disabled = false; this.dom.boosterClickFrenzyTimer.textContent = this.getText("booster_ready"); }
+                
+                const doubledCpsBtn = D('booster-doubled-cps'), doubledCpsTimer = D('booster-doubled-cps-timer');
+                if (now < this.state.booster.doubledCpsEnd) { doubledCpsTimer.textContent = `${this.getText("booster_active")} ${Math.ceil((this.state.booster.doubledCpsEnd - now) / 1000)}s`; doubledCpsBtn.disabled = true; } 
+                else if (now < this.state.booster.doubledCpsCooldownEnd) { doubledCpsBtn.disabled = true; doubledCpsTimer.textContent = `${this.getText("booster_cooldown")} ${formatTime(Math.ceil((this.state.booster.doubledCpsCooldownEnd - now) / 1000))}`; } 
+                else { doubledCpsBtn.disabled = false; doubledCpsTimer.textContent = this.getText("booster_ready"); }
+
+                const timeWarpBtn = D('booster-time-warp'), timeWarpTimer = D('booster-time-warp-timer');
+                if (now < this.state.booster.timeWarpCooldownEnd) { timeWarpBtn.disabled = true; timeWarpTimer.textContent = `${this.getText("booster_cooldown")} ${formatTime(Math.ceil((this.state.booster.timeWarpCooldownEnd - now) / 1000))}`; } 
+                else { timeWarpBtn.disabled = false; timeWarpTimer.textContent = this.getText("booster_ready"); }
+
+                const s = this.state.stats;
+                this.dom.detailedStatsContainer.innerHTML = `
+                    <div class="stat-box"><div>${this.getText("stat_time_played")}</div><div class="stat-value">${formatTime(s.timePlayed)}</div></div>
+                    <div class="stat-box"><div>${this.getText("stat_manual_clicks")}</div><div class="stat-value">${formatNumber(s.manualClicks)}</div></div>
+                    <div class="stat-box"><div>${this.getText("stat_crit_clicks")}</div><div class="stat-value">${formatNumber(s.critClicks)}</div></div>
+                    <div class="stat-box"><div>${this.getText("stat_upgrades_purchased")}</div><div class="stat-value">${formatNumber(s.upgradesPurchased)}</div></div>
+                    <div class="stat-box"><div>${this.getText("stat_frenzy_activations")}</div><div class="stat-value">${formatNumber(s.frenzyActivations)}</div></div>
+                    <div class="stat-box"><div>${this.getText("stat_prestiges_done")}</div><div class="stat-value">${s.prestiges}</div></div>
+                    <div class="stat-box"><div>${this.getText("stat_golden_clicked")}</div><div class="stat-value">${formatNumber(s.goldenClickersClicked || 0)}</div></div>
+                    <div class="stat-box"><div>${this.getText("stat_clicks_donated")}</div><div class="stat-value">${formatNumber(s.clicksDonated || 0)}</div></div>`;
+            }
+
+            showFloatingText(amount, isCrit) {
+                const container = this.isInClanWarAttack ? this.dom.cwBossContainer : this.dom.clicksDisplay;
+                const fly = document.createElement('span'); fly.textContent = `+${formatNumber(amount)}`;
+                fly.className = `fly ${isCrit ? 'crit' : ''} ${this.isInClanWarAttack ? 'cw-boss-damage-fly' : ''}`;
+                container.appendChild(fly); setTimeout(() => fly.remove(), isCrit ? 1200 : 1000);
+            }
+
+            showNotification(messageKey, params = [], type = 'info') {
+                const cont = D('notification-container'); if (!cont) return;
+                const notif = document.createElement('div'); notif.className = `notification ${type}`;
+                const icons = { success: 'check-circle', error: 'exclamation-circle', info: 'info-circle', prestige: 'star', offline: 'hourglass-half' };
+                notif.innerHTML = `<i class="fas fa-${icons[type] || 'bell'}"></i><span>${this.getText(messageKey, params)}</span>`;
+                cont.prepend(notif); this.playSound('success'); setTimeout(() => notif.remove(), 4000);
+            }
+
+            playSound(sound) {
+                if (this.isSoundEnabled && this.audio[sound]) {
+                    this.audio[sound].currentTime = 0; this.audio[sound].play().catch(() => {});
+                }
+            }
+
+            toggleSound() {
+                this.isSoundEnabled = !this.isSoundEnabled;
+                D('sound-status-text').textContent = this.getText(this.isSoundEnabled ? 'sound_on' : 'sound_off');
+                D('toggle-sound-btn').querySelector('i').className = `fas fa-volume-${this.isSoundEnabled ? 'up' : 'mute'}`;
+            }
+
+            applySettings() {
+                this.setTheme(this.state.settings.accentColor, false); this.setFont(this.state.settings.font, false);
+                D('body-root').classList.toggle('simplified-graphics', this.state.settings.simplifiedGraphics);
+                D('graphics-status-text').textContent = this.getText(this.state.settings.simplifiedGraphics ? 'graphics_simple' : 'graphics_full');
+                this.updatePresetsUI();
+            }
+
+            setTheme(color, shouldSave = true) {
+                this.state.settings.accentColor = color; document.documentElement.style.setProperty('--accent', color);
+                document.documentElement.style.setProperty('--accent-rgb', hexToRgb(color));
+                if(shouldSave) this.saveGame();
+                D('color-swatches-container')?.querySelectorAll('.color-swatch').forEach(s => s.classList.toggle('active', s.dataset.color === color));
+            }
+            
+            setFont(fontName, shouldSave = true) {
+                if (FONTS[fontName]) {
+                    this.state.settings.font = fontName;
+                    document.documentElement.style.setProperty('--font-family', FONTS[fontName]);
+                    if (this.dom.fontSelector) this.dom.fontSelector.value = fontName;
+                    if (shouldSave) this.saveGame();
+                }
+            }
+            
+            updatePresetsUI() { this.state.settings.stylePresets.forEach((p, i) => { const pv = D(`preset-preview-${i}`); if (pv) pv.style.background = p ? p.color : '#2a2a2a'; }); }
+            savePreset(index) {
+                const slotIndex = index - 1; this.state.settings.stylePresets[slotIndex] = { color: this.state.settings.accentColor, font: this.state.settings.font };
+                this.updatePresetsUI(); this.saveGame(); this.showNotification('notif_preset_saved', [index], 'success');
+            }
+            loadPreset(index) {
+                const slotIndex = index - 1; const preset = this.state.settings.stylePresets[slotIndex];
+                if (preset) { this.setTheme(preset.color); this.setFont(preset.font); this.showNotification('notif_preset_loaded', [index], 'success'); } 
+                else { this.showNotification('notif_preset_empty', [index], 'error'); }
+            }
+
+            toggleGraphics() {
+                this.state.settings.simplifiedGraphics = !this.state.settings.simplifiedGraphics;
+                this.applySettings(); this.saveGame();
+            }
+
+            activateClickFrenzy() {
+                const now = Date.now(); const artifactBonuses = this.calculateArtifactBonuses();
+                const cooldownReduction = (this.state.prestigeUpgrades.beyondTime || 0) * 0.05 * artifactBonuses.cooldown;
+                if (now > this.state.booster.clickFrenzyCooldownEnd) {
+                    this.state.booster.clickFrenzyEnd = now + 10000; this.state.booster.clickFrenzyCooldownEnd = now + (60000 * (1 - cooldownReduction));
+                    this.state.stats.frenzyActivations++; this.playSound('success'); this.showNotification("notif_frenzy_active", [], 'prestige');
+                    this.saveGame();
+                }
+            }
+            
+            activateDoubledCps() {
+                const now = Date.now(); const artifactBonuses = this.calculateArtifactBonuses();
+                if (now > this.state.booster.doubledCpsCooldownEnd) {
+                    this.state.booster.doubledCpsEnd = now + 30000; this.state.booster.doubledCpsCooldownEnd = now + (600000 * artifactBonuses.cooldown);
+                    this.playSound('success'); this.showNotification("notif_doubled_cps_active", [], 'success'); this.saveGame();
+                }
+            }
+
+            activateTimeWarp() {
+                const now = Date.now(); const artifactBonuses = this.calculateArtifactBonuses();
+                if (now > this.state.booster.timeWarpCooldownEnd) {
+                    const gain = this.getEffectiveCPS(true) * 7200;
+                    if (gain > 0) { this.state.clicks += gain; this.state.totalClicks += gain; this.showNotification("notif_time_warp_active", [formatNumber(gain)], 'info'); }
+                    this.state.booster.timeWarpCooldownEnd = now + (14400000 * artifactBonuses.cooldown);
+                    this.playSound('success'); this.saveGame();
+                }
+            }
+
+            checkDailyReward() {
+                if (Date.now() - this.state.lastDailyReward > 24 * 60 * 60 * 1000) { this.dom.dailyRewardModal.style.display = 'flex'; }
+            }
+
+            claimDailyReward() {
+                this.state.prestigePoints++; this.state.lastDailyReward = Date.now();
+                this.dom.dailyRewardModal.style.display = 'none';
+                this.showNotification("notif_daily_reward", [], 'prestige'); this.saveGame();
+            }
+            
+            trySpawnGoldenClicker() {
+                if (document.querySelector('.golden-clicker')) return;
+                const chanceUpgradeBonus = (this.state.prestigeUpgrades.goldenChance || 0) * 0.10;
+                if (Math.random() < 0.005 * (1 + chanceUpgradeBonus)) { this.spawnGoldenClicker(); }
+            }
+
+            spawnGoldenClicker() {
+                const gc = document.createElement('div'); gc.className = 'golden-clicker'; gc.innerHTML = '<i class="fas fa-cookie-bite"></i>';
+                const appRect = D('app').getBoundingClientRect();
+                gc.style.top = `${Math.random() * (appRect.height - 120) + 60}px`; gc.style.left = `${Math.random() * (appRect.width - 60)}px`;
+                gc.onclick = () => { this.reapGoldenClickerReward(); gc.remove(); };
+                D('app').appendChild(gc);
+                const duration = 8000 * (1 + (this.state.prestigeUpgrades.goldenTime || 0) * 0.05);
+                setTimeout(() => gc.remove(), duration);
+            }
+
+            reapGoldenClickerReward() {
+                this.playSound('success'); this.state.stats.goldenClickersClicked++;
+                const fortuneBonus = (this.state.prestigeUpgrades.goldenFortune || 0) * 0.10;
+                const rewardType = Math.random();
+                if (rewardType < 0.02) {
+                    const availableArtifacts = Object.keys(ARTIFACTS).filter(id => !this.state.unlockedArtifacts[id]);
+                    if (availableArtifacts.length > 0) {
+                        const foundArtifactId = availableArtifacts[Math.floor(Math.random() * availableArtifacts.length)];
+                        this.state.unlockedArtifacts[foundArtifactId] = true;
+                        this.showNotification("notif_artifact_found", [this.getText(ARTIFACTS[foundArtifactId].nameKey)], 'prestige');
+                        this.generateProfileUI(); this.saveGame(); return;
+                    }
+                }
+                if (rewardType < 0.7) {
+                    const reward = (this.getEffectiveCPS() * 15 * 60) * (1 + fortuneBonus);
+                    this.state.clicks += reward; this.showNotification('notif_golden_click_1', [formatNumber(reward)], 'prestige');
+                } else {
+                    this.state.tempBonus.cpsMultiplier = 2 * (1 + fortuneBonus);
+                    this.state.tempBonus.cpsMultiplierEnd = Date.now() + 20000;
+                    this.showNotification('notif_golden_click_2', [], 'prestige');
+                }
+            }
+
+            async handleAvatarUrl() { 
+                const url = this.dom.avatarUrlInput.value.trim();
+                const urlRegex = /^(https?:\/\/[^\s$.?#].[^\s]*)$/i;
+                if (!url || !urlRegex.test(url)) { this.showNotification("notif_avatar_fail", [], 'error'); return; }
+                try {
+                    this.showNotification("notif_avatar_uploading");
+                    await set(ref(db, `users/${this.user.uid}/userProfile/avatarUrl`), url);
+                    this.state.avatarUrl = url;
+                    this.updateAvatar(url); this.showNotification("notif_avatar_success", [], "success");
+                    this.dom.avatarUrlInput.value = ''; await this.saveGame();
+                } catch (error) { console.error("Avatar URL update failed:", error); this.showNotification("notif_avatar_fail", [], 'error'); }
+            }
+
+            openAvatarEditor(imageUrl) { this.dom.avatarEditorImage.crossOrigin = 'anonymous';
+            this.dom.avatarEditorImage.src = imageUrl; this.dom.avatarEditorModal.style.display = 'flex'; if (this.avatarCropper) { this.avatarCropper.destroy(); } this.avatarCropper = new Cropper(this.dom.avatarEditorImage, { aspectRatio: 1, viewMode: 1, background: false, }); }
+            closeAvatarEditor() { this.dom.avatarEditorModal.style.display = 'none'; if (this.avatarCropper) { this.avatarCropper.destroy(); this.avatarCropper = null; } }
+            uploadCroppedAvatar() {
+                if (!this.avatarCropper || !this.user) return;
+                this.avatarCropper.getCroppedCanvas({ width: 256, height: 256, }).toBlob(async (blob) => {
+                    if (!blob) { this.showNotification("notif_avatar_fail", [], 'error'); return; }
+                    this.closeAvatarEditor(); this.showNotification("notif_avatar_uploading");
+                    const storagePath = `avatars/${this.user.uid}/avatar.png`;
+                    const uploadTask = uploadBytesResumable(sref(storage, storagePath), blob);
+                    uploadTask.on('state_changed', null, (err) => { this.showNotification("notif_avatar_fail", [], 'error'); console.error(err); }, async () => {
+                        const url = await getDownloadURL(uploadTask.snapshot.ref);
+                        await set(ref(db, `users/${this.user.uid}/userProfile/avatarUrl`), url);
+                        this.state.avatarUrl = url;
+                        this.updateAvatar(url); this.showNotification("notif_avatar_success", [], "success");
+                    });
+                }, 'image/png');
+            }
+            updateAvatar(url) { if (!url) return; const timestampedUrl = `${url}?t=${new Date().getTime()}`; this.dom.avatarDisplay.innerHTML = `<img src="${timestampedUrl}" alt="Avatar">`; this.dom.profileAvatarLarge.innerHTML = `<img src="${timestampedUrl}" alt="Avatar">`; }
+            showTooltip(e, text) { if (this.dom.tooltip) { this.dom.tooltip.textContent = text; this.dom.tooltip.style.opacity = '1'; this.moveTooltip(e); } }
+            hideTooltip() { if (this.dom.tooltip) this.dom.tooltip.style.opacity = '0'; }
+            moveTooltip(e) { if (!this.dom.tooltip) return; let x = e.clientX + 10, y = e.clientY - 10; if (x + this.dom.tooltip.offsetWidth > window.innerWidth) x = e.clientX - this.dom.tooltip.offsetWidth - 10; if (y < 10) y = e.clientY + 20; this.dom.tooltip.style.left = `${x}px`; this.dom.tooltip.style.top = `${y}px`; }
+            shutdown() { Object.values(this.intervals).forEach(clearInterval); this.user = null; this.stopAllMiniGames(); this.detachChatListener(); this.detachClanWarListener(); }
+            
+            setLanguage(lang, forceUIRegen = false) {
+                this.currentLanguage = lang; localStorage.setItem('fce_lang', lang);
+                if (this.user) this.state.settings.language = lang;
+                document.title = this.getText('title');
+                document.querySelectorAll('[data-lang-key]').forEach(el => { el.innerHTML = this.getText(el.dataset.langKey); });
+                document.querySelectorAll('[data-lang-placeholder]').forEach(el => { el.placeholder = this.getText(el.dataset.langPlaceholder); });
+                if (forceUIRegen && this.user) { this.generateAllUI(); this.generateFontUI(); } 
+                else if(this.user) { this.updateUI(); } 
+                else {
+                     D('form-title').innerHTML = this.getText(isLogin ? 'auth_login_title' : 'auth_register_title'); 
+                    D('auth-button').innerHTML = this.getText(isLogin ? 'auth_login_btn' : 'auth_register_btn'); 
+                    D('toggle-form-text').innerHTML = this.getText(isLogin ? 'auth_toggle_register_text' : 'auth_toggle_login_text');
+                }
+                D('lang-en-btn').classList.toggle('active', lang === 'en'); D('lang-ru-btn').classList.toggle('active', lang === 'ru');
+                if(this.user) this.saveGame();
+            }
+
+            getText(key, params = []) {
+                const keyParts = key.split('.'); let text = (languageStrings[this.currentLanguage] || languageStrings.en);
+                for (const part of keyParts) { text = text?.[part]; if (text === undefined) return key; }
+                if (typeof text !== 'string') return key;
+                for (let i = 0; i < params.length; i++) {
+                    let paramValue = params[i];
+                    let paramText = this.getText(`u_names.${paramValue}`) || this.getText(`q_names.${paramValue}`) || this.getText(`a_names.${paramValue}`) || this.getText(`cu_names.${paramValue}`) || this.getText(paramValue);
+                    if (paramText === paramValue && !Object.values(this.getText).includes(paramValue)) { paramText = paramValue; }
+                    text = text.replace(`{${i}}`, paramText);
+                }
+                return text;
+            }
+            haltGame() { Object.values(this.intervals).forEach(clearInterval); D('tamper-modal').style.display = 'flex'; this.setLanguage(this.state.settings?.language || 'en', true); console.error("HALT: Script integrity compromised."); }
+            selectMiniGame(gameName) {
+                ['minesweeper-game', 'tictactoe-game', 'flappybird-game'].forEach(id => D(id).style.display = 'none'); this.stopAllMiniGames();
+                const gameContainer = D(`${gameName}-game`); if (gameContainer) gameContainer.style.display = 'block';
+                switch (gameName) {
+                    case 'minesweeper': this.initMinesweeper(); break;
+                    case 'tictactoe': this.initTicTacToe(); break;
+                    case 'flappybird': this.initFlappyBird(); break;
+                }
+            }
+            stopAllMiniGames() { clearInterval(this.msTimerInterval); this.msTimerInterval = null; clearInterval(this.fbLoopInterval); clearInterval(this.fbPipeSpawnInterval); this.fbLoopInterval = null; this.fbPipeSpawnInterval = null; this.dom.flappyBirdContainer?.querySelectorAll('.flappy-pipe').forEach(p => p.remove()); if (this.dom.flappyBirdContainer) this.dom.flappyBirdContainer.onclick = null; document.onkeydown = null; }
+            initMinesweeper() {} placeMines() {} calculateMineValues() {} msRevealCell() {} msToggleFlag() {} msEndGame() {}
+            initTicTacToe() {} tttMakeMove() {} tttComputerMove() {} tttPlaceMark() {} tttCheckWin() {} tttCheckDraw() {} tttFindBestMove() {}
+            initFlappyBird() {} startFlappyBird() {} flapBird() {} flappyGameLoop() {} spawnFlappyPipe() {} endFlappyBird() {}
+            
+            async generateClanUI() {
+                if (!this.state.clanId) {
+                    this.dom.clanDashboardView.style.display = 'none'; this.dom.clanJoinCreateView.style.display = 'block';
+                } else {
+                    this.dom.clanJoinCreateView.style.display = 'none'; this.dom.clanDashboardView.style.display = 'block';
+                    await this.loadClanDetails();
+                    this.attachClanWarListener();
+                }
+            }
+            async loadClanDetails() {
+                if (!this.state.clanId) return;
+                try {
+                    const clanRef = ref(db, `clans/${this.state.clanId}`);
+                    const snapshot = await get(clanRef);
+                    if (snapshot.exists()) {
+                        this.clanData = snapshot.val();
+                        this.dom.clanNameDisplay.textContent = this.clanData.name;
+                        const members = this.clanData.members || {};
+                        this.dom.clanMemberCount.textContent = Object.keys(members).length;
+                        this.dom.clanTreasuryDisplay.textContent = formatNumber(this.clanData.treasury || 0);
+                        
+                        // Clan member list with title colors
+                        const memberListPromises = Object.entries(members).map(async ([uid, username]) => {
+                            const lbSnap = await get(ref(db, `leaderboard/${uid}/titleKey`));
+                            const titleKey = lbSnap.exists() ? lbSnap.val() : null;
+                            const titleClass = titleKey ? `${titleKey}-title` : '';
+                            return `<li><span class="${titleClass}">${username}</span></li>`;
+                        });
+                        const memberListHTML = await Promise.all(memberListPromises);
+                        this.dom.clanMemberList.innerHTML = memberListHTML.join('');
+
+                        this.calculateClanBonuses(); this.generateClanUpgradesUI();
+                    } else { this.state.clanId = null; this.generateClanUI(); }
+                } catch (e) { this.showNotification('notif_clan_fail', [], 'error'); }
+            }
+            async createClan() {
+                const clanName = this.dom.clanNameInput.value.trim();
+                if (!clanName || clanName.length < 3 || clanName.length > 20) { this.showNotification('Clan name must be 3-20 characters.', [], 'error'); return; }
+                if (this.state.clanId) return;
+                try {
+                    const newClanRef = push(ref(db, 'clans'));
+                    const newClanId = newClanRef.key;
+                    const newClanData = { name: clanName, owner: this.user.uid, createdAt: Date.now(), members: { [this.user.uid]: this.state.username }, treasury: 0, upgrades: {} };
+                    await set(newClanRef, newClanData); this.state.clanId = newClanId;
+                    await set(ref(db, `users/${this.user.uid}/gameState/clanId`), newClanId);
+                    this.showNotification('notif_clan_created', [clanName], 'success'); this.generateClanUI();
+                } catch (e) { this.showNotification('notif_clan_fail', [], 'error'); }
+            }
+            async leaveClan() {
+                if (!this.state.clanId || !confirm(this.getText('confirm_clan_leave'))) return;
+                try {
+                    const updates = { [`/clans/${this.state.clanId}/members/${this.user.uid}`]: null, [`/users/${this.user.uid}/gameState/clanId`]: null };
+                    await update(ref(db), updates); this.state.clanId = null; this.clanData = null; this.calculateClanBonuses();
+                    this.showNotification('notif_clan_left', [], 'info'); this.generateClanUI();
+                } catch(e) { this.showNotification('notif_clan_fail', [], 'error'); }
+            }
+            async donateToClan() {
+                const amount = parseInt(this.dom.clanDonateInput.value, 10);
+                if (!amount || amount <= 0 || this.state.clicks < amount) { this.showNotification('notif_clan_donation_fail', [], 'error'); return; }
+                this.state.clicks -= amount; this.state.stats.clicksDonated = (this.state.stats.clicksDonated || 0) + amount;
+                await update(ref(db), { [`clans/${this.state.clanId}/treasury`]: increment(amount) });
+                this.showNotification('notif_clan_donated', [formatNumber(amount)], 'success');
+                this.dom.clanDonateInput.value = ''; this.loadClanDetails();
+            }
+            generateClanUpgradesUI() {
+                if (!this.clanData) return;
+                const treasury = this.clanData.treasury || 0;
+                this.dom.clanUpgradesContainer.innerHTML = Object.entries(CLAN_UPGRADES).map(([id, conf]) => {
+                    const level = this.clanData.upgrades?.[id] || 0; const isMax = level >= conf.maxLevel;
+                    const cost = isMax ? 0 : conf.cost(level); const canAfford = treasury >= cost;
+                    const name = this.getText(`cu_names.${id}`); let desc = this.getText(`cu_descs.${id}`);
+                    const costHTML = isMax ? `<span class="prestige-cost">${this.getText("max_level")}</span>` : `<span class="item-cost">${formatNumber(cost)}</span>`;
+                    return `<button class="btn" data-id="${id}" ${isMax || !canAfford ? 'disabled' : ''}><span class="item-info"><i class="fas ${conf.icon}"></i><span class="title">${name} <span class="level">[${level}/${conf.maxLevel}]</span></span></span>${costHTML}<i class="fas fa-info-circle btn-info-icon" data-tooltip="${desc}"></i></button>`;
+                }).join('');
+            }
+            async buyClanUpgrade(id) {
+                if (!this.clanData || this.user.uid !== this.clanData.owner) return;
+                const conf = CLAN_UPGRADES[id]; const level = this.clanData.upgrades?.[id] || 0; const cost = conf.cost(level);
+                if (level >= conf.maxLevel || (this.clanData.treasury || 0) < cost) { this.showNotification('notif_clan_upgrade_fail', [], 'error'); return; }
+                const updates = { [`clans/${this.state.clanId}/treasury`]: increment(-cost), [`clans/${this.state.clanId}/upgrades/${id}`]: increment(1) };
+                await update(ref(db), updates); this.showNotification('notif_clan_upgrade_success', [], 'success'); this.loadClanDetails();
+            }
+            calculateClanBonuses() {
+                if (!this.clanData || !this.clanData.upgrades) { this.clanBonuses = { cps: 0, cpc: 0 }; return; }
+                const upgrades = this.clanData.upgrades;
+                this.clanBonuses.cps = (upgrades.cpsBonus || 0) * 0.01; this.clanBonuses.cpc = (upgrades.cpcBonus || 0) * 0.01;
+            }
+
+            async sendChatMessage() {
+                const text = this.dom.chatInput.value.trim(); if (!text) return; this.dom.chatInput.value = '';
+                const message = {
+                    uid: this.user.uid, username: this.state.username, text: text,
+                    titleKey: this.state.activeTitle, // Pass title key
+                    avatarUrl: this.state.avatarUrl, timestamp: serverTimestamp()
+                };
+                try { await push(ref(db, 'chat'), message); } catch (e) { console.error("Chat message failed:", e); }
+            }
+            attachChatListener() {
+                if (this.chatListener) return; this.dom.chatMessages.innerHTML = '';
+                const chatRef = query(ref(db, 'chat'), limitToLast(50));
+                this.chatListener = onChildAdded(chatRef, (snapshot) => { this.renderChatMessage(snapshot.val()); });
+            }
+            detachChatListener() { if (this.chatListener) { off(ref(db, 'chat'), 'child_added', this.chatListener); this.chatListener = null; } }
+            renderChatMessage(data) {
+                const msgEl = document.createElement('div'); msgEl.className = 'chat-message';
+                const avatarHTML = data.avatarUrl ? `<div class="chat-avatar"><img src="${data.avatarUrl}" alt="avatar"></div>` : `<div class="chat-avatar" style="background:#333; display:flex; align-items:center; justify-content:center;"><i class="fas fa-user"></i></div>`;
+                const titleClassName = data.titleKey ? `${data.titleKey}-title` : '';
+                msgEl.innerHTML = `${avatarHTML}<div class="chat-content"><div><span class="chat-username ${titleClassName}">${data.username}</span></div><div class="chat-text">${data.text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div></div>`;
+                this.dom.chatMessages.prepend(msgEl);
+            }
+
+            attachClanWarListener() {
+                if (this.clanWarListener || !this.state.clanId) return;
+                const warRef = ref(db, `clans/${this.state.clanId}/clanWar`);
+                this.clanWarListener = onValue(warRef, (snapshot) => {
+                    const warData = snapshot.val();
+                    if(this.clanData && this.clanWarData && warData?.isActive && warData.currentHealth <= 0 && !this.clanWarData.rewardsDistributed) {
+                        this.endClanWar(true);
+                    } else if (this.clanData && this.clanWarData && warData?.isActive && Date.now() > warData.endTime && !this.clanWarData.rewardsDistributed) {
+                        this.endClanWar(false);
+                    }
+                    this.clanWarData = warData;
+                    this.renderClanWarUI();
+                });
+            }
+            detachClanWarListener() {
+                if (this.clanWarListener && this.state.clanId) {
+                    off(ref(db, `clans/${this.state.clanId}/clanWar`), 'value', this.clanWarListener);
+                    this.clanWarListener = null;
+                }
+            }
+            renderClanWarUI() {
+                if (!this.clanData || !D('clans').style.display.includes('block')) return;
+                const war = this.clanWarData; const now = Date.now();
+                const showView = (view) => {
+                    ['clanWarActiveView', 'clanWarInactiveView', 'clanWarCooldownView'].forEach(v => this.dom[v].style.display = 'none');
+                    this.dom[view].style.display = 'block';
+                };
+                if (war && war.isActive) {
+                    showView('clanWarActiveView');
+                    this.dom.clanWarBossName.textContent = war.boss.name;
+                    this.dom.clanWarBossHealth.textContent = `${formatNumber(war.currentHealth ?? war.boss.maxHealth)} / ${formatNumber(war.boss.maxHealth)}`;
+                    this.dom.clanWarHealthBar.style.width = `${Math.max(0, ((war.currentHealth ?? war.boss.maxHealth) / war.boss.maxHealth) * 100)}%`;
+                    const myDamage = war.participants?.[this.user.uid]?.damageDealt || 0;
+                    this.dom.clanWarMyDamage.textContent = formatNumber(myDamage);
+                    const remainingTime = Math.max(0, war.endTime - now);
+                    this.dom.clanWarTimer.textContent = formatTime(remainingTime / 1000);
+                    const myLastAttack = war.participants?.[this.user.uid]?.lastAttackTimestamp || 0;
+                    const attackCooldownEnd = myLastAttack + 3600 * 1000;
+                    if(now < attackCooldownEnd){
+                        this.dom.clanWarAttackBtn.disabled = true;
+                        this.dom.clanWarAttackCooldown.style.display = 'block';
+                        const cdRemaining = (attackCooldownEnd - now) / 1000;
+                        this.dom.clanWarAttackCooldown.textContent = this.getText('clans_war_attack_cd_msg', [formatTime(cdRemaining)]);
+                    } else {
+                        this.dom.clanWarAttackBtn.disabled = false;
+                        this.dom.clanWarAttackCooldown.style.display = 'none';
+                    }
+                } else if (war && now < war.cooldownEnd) {
+                    showView('clanWarCooldownView');
+                    const remainingTime = Math.max(0, war.cooldownEnd - now);
+                    this.dom.clanWarGlobalCooldownTimer.textContent = formatTime(remainingTime / 1000);
+                } else {
+                    showView('clanWarInactiveView');
+                    this.dom.clanWarStartBtn.style.display = (this.user.uid === this.clanData.owner) ? 'flex' : 'none';
+                }
+            }
+            async startClanWar() {
+                if (this.user.uid !== this.clanData.owner) return;
+                const now = Date.now();
+                if (this.clanWarData && now < this.clanWarData.cooldownEnd) { this.showNotification("War is on cooldown!", [], 'error'); return; }
+                const bossName = "Древний кликер-голем";
+                const bossHealth = Object.keys(this.clanData.members || {}).length * 100000000;
+                const newWarData = {
+                    isActive: true, startTime: now, endTime: now + 24 * 3600 * 1000,
+                    cooldownEnd: now + 48 * 3600 * 1000, rewardsDistributed: false,
+                    boss: { name: bossName, maxHealth: bossHealth, currentHealth: bossHealth }, participants: {}
+                };
+                await set(ref(db, `clans/${this.state.clanId}/clanWar`), newWarData);
+                this.showNotification("notif_clan_war_started", [bossName], 'prestige');
+            }
+            initiateClanWarAttack() {
+                this.isInClanWarAttack = true;
+                this.clanWarAttackDamage = 0;
+                let timeLeft = 60;
+                this.dom.clanWarAttackOverlay.style.display = 'flex';
+                this.dom.clanWarAttackTimer.textContent = timeLeft;
+                this.dom.clanWarAttackDamage.textContent = 0;
+                this.dom.clanWarAttackCpc.textContent = formatNumber(this.getEffectiveCPC());
+                this.dom.cwBossHealthBar.style.width = `${Math.max(0, ((this.clanWarData.currentHealth ?? this.clanWarData.boss.maxHealth) / this.clanWarData.boss.maxHealth) * 100)}%`;
+
+                const timerInterval = setInterval(async () => {
+                    timeLeft--;
+                    this.dom.clanWarAttackTimer.textContent = timeLeft;
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        this.isInClanWarAttack = false;
+                        this.dom.clanWarAttackOverlay.style.display = 'none';
+                        if (this.clanWarAttackDamage > 0) {
+                            await this.submitClanWarDamage(this.clanWarAttackDamage);
+                        }
+                    }
+                }, 1000);
+            }
+            clanWarAttackClick() {
+                const damage = this.getEffectiveCPC();
+                this.clanWarAttackDamage += damage;
+                this.dom.clanWarAttackDamage.textContent = formatNumber(this.clanWarAttackDamage);
+                this.showFloatingText(damage, false);
+            }
+            async submitClanWarDamage(damage) {
+                const updates = {};
+                updates[`/clans/${this.state.clanId}/clanWar/boss/currentHealth`] = increment(-damage);
+                updates[`/clans/${this.state.clanId}/clanWar/participants/${this.user.uid}/damageDealt`] = increment(damage);
+                updates[`/clans/${this.state.clanId}/clanWar/participants/${this.user.uid}/username`] = this.state.username;
+                updates[`/clans/${this.state.clanId}/clanWar/participants/${this.user.uid}/lastAttackTimestamp`] = Date.now();
+                await update(ref(db), updates);
+            }
+            async endClanWar(isVictory) {
+                const updates = {};
+                updates[`/clans/${this.state.clanId}/clanWar/isActive`] = false;
+                updates[`/clans/${this.state.clanId}/clanWar/rewardsDistributed`] = true;
+                
+                if (isVictory) {
+                    this.showNotification('notif_clan_war_win', [], 'success');
+                    Object.keys(this.clanWarData.participants).forEach(uid => {
+                        updates[`/users/${uid}/gameState/unlockedTitles/boss_slayer`] = true;
+                        updates[`/users/${uid}/gameState/prestigePoints`] = increment(50); // Example reward
+                    });
+                } else {
+                    this.showNotification('notif_clan_war_lose', [], 'error');
+                }
+                await update(ref(db), updates);
+            }
+        }
+        
+        const game = new ClickerGame();
+        let isLogin = true;
+
+        const authButton = D('auth-button'), toggleFormText = D('toggle-form-text');
+        const showError = (msg) => { const e = D('error-message'); e.textContent = msg; e.classList.remove('hidden'); };
+        
+        const handleAuth = async () => { 
+            const email = D('email').value; const password = D('password').value; const uname = D('username-input').value;
+            D('error-message').classList.add('hidden'); 
+            if (!isLogin && !uname) return showError('Username is required.');
+            try { 
+                await setPersistence(auth, browserSessionPersistence); 
+                if (isLogin) { await signInWithEmailAndPassword(auth, email, password); } 
+                else { const cred = await createUserWithEmailAndPassword(auth, email, password); await set(ref(db, `users/${cred.user.uid}/gameState`), getInitialGameState(uname)); } 
+            } catch (e) { showError(e.code); } 
+        };
+
+        const toggleAuthForm = (e) => {
+            e.preventDefault(); if (e.target.tagName !== 'A') return;
+            isLogin = !isLogin; game.setLanguage(game.currentLanguage);
+            D('username-input').style.display = isLogin ? 'none' : 'block'; 
+            D('error-message').classList.add('hidden'); 
+        };
+
+        authButton.addEventListener('click', handleAuth);
+        toggleFormText.addEventListener('click', toggleAuthForm);
+        
+        const togglePasswordBtn = D('toggle-password'), passwordInput = D('password'), togglePasswordIcon = D('toggle-password-icon');
+        togglePasswordBtn.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            togglePasswordIcon.className = `fas ${isPassword ? 'fa-eye-slash' : 'fa-eye'}`;
+        });
+        
+        function initializeAppLogic() {
+            onAuthStateChanged(auth, async (user) => {
+                const loading = D('loading-overlay'), authCont = D('auth-container'), appCont = D('app');
+                try {
+                    if (user) {
+                        await game.init(user);
+                        authCont.style.opacity = '0'; authCont.style.pointerEvents = 'none';
+                        appCont.style.display = 'block'; setTimeout(() => appCont.classList.add('loaded'), 100);
+                    } else {
+                        game.shutdown();
+                        appCont.style.display = 'none'; appCont.classList.remove('loaded');
+                        authCont.style.opacity = '1'; authCont.style.pointerEvents = 'auto';
+                        isLogin = true; game.setLanguage(localStorage.getItem('fce_lang') || 'en');
+                    }
+                } catch (error) {
+                    console.error("Critical init error:", error);
+                    authCont.style.opacity = '1'; authCont.style.pointerEvents = 'auto';
+                } finally {
+                    loading.style.opacity = '0'; setTimeout(() => loading.style.display = 'none', 500);
+                }
+            });
+        }
+
+        D('splash-continue-btn').onclick = () => {
+            D('splash-modal').style.display = 'none'; D('loading-overlay').style.display = 'flex';
+            sessionStorage.setItem("splashShown", "true"); initializeAppLogic();
+        };
+
+        document.addEventListener('DOMContentLoaded', async () => {
+             scriptHash = await calculateHash(D('game-script').textContent);
+             if (sessionStorage.getItem("splashShown")) {
+                D('splash-modal').style.display = 'none'; D('loading-overlay').style.display = 'flex';
+                initializeAppLogic();
+            } else {
+                D('splash-modal').style.display = 'flex';
+                game.setLanguage(localStorage.getItem('fce_lang') || 'en');
+            }
+            D('username-input').style.display = 'none';
+        });
+</script>
+</body>
+</html>
